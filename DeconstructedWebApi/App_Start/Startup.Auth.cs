@@ -30,9 +30,10 @@ namespace Ignia.Workbench.DeconstructedWebApi {
     /// <value>The public client identifier.</value>
     public static string PublicClientId { get; private set; }
 
-    // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
     /// <summary>
-    ///   Extends the global <see cref="Startup"/> class to add authentication support to the OWIN pipeline (via the <see cref="IAppBuilder"/> instance).
+    ///   Extends the global <see cref="Startup"/> class to add authentication support to the OWIN pipeline (via the 
+    ///   <see cref="IAppBuilder"/> instance). For more details on configuring authentication, see 
+    ///   <seealso cref="http://go.microsoft.com/fwlink/?LinkId=301864"/>.
     /// </summary>
     /// <param name="app">The OWIN application pipeline.</param>
     public void ConfigureAuth(IAppBuilder app) {

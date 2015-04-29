@@ -9,14 +9,18 @@ using Newtonsoft.Json.Serialization;
 namespace Ignia.Workbench.DeconstructedWebApi {
 
   /// <summary>
-  ///   Provides a location for configuring the WebAPI. Referenced by the <see cref="WebApiApplication"/> class as a parameter to <see cref="GlobalConfiguration.Configuration"/>. 
+  ///   Provides configuration information for the WebAPI. Referenced by the <see cref="WebApiApplication"/> class as a 
+  ///   parameter to <see cref="GlobalConfiguration.Configuration"/>. 
   /// </summary>
   public static class WebApiConfig {
 
     /// <summary>
-    ///   Provides a callback for <see cref="GlobalConfiguration.Configuration"/> to use in order to configure WebAPI, including global defaults and routes. 
+    ///   Provides a callback for <see cref="GlobalConfiguration.Configuration"/> to use in order to configure WebAPI, 
+    ///   including global defaults and routes. 
     /// </summary>
-    /// <param name="config">A reference to the global <see cref="HttpConfiguration"/>, which the options will be set on.</param>
+    /// <param name="config">
+    ///   A reference to the global <see cref="HttpConfiguration"/>, which the options will be set on.
+    /// </param>
     public static void Register(HttpConfiguration config) {
 
       //Web API configuration and services
