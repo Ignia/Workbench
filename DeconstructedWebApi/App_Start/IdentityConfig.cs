@@ -52,15 +52,13 @@ namespace Ignia.Workbench.DeconstructedWebApi {
       \----------------------------------------------------------------------------------------------------------------------*/
 
       //Configure validation logic for user names
-      manager.UserValidator = new UserValidator<ApplicationUser>(manager)
-      {
+      manager.UserValidator = new UserValidator<ApplicationUser>(manager) {
         AllowOnlyAlphanumericUserNames = false,
         RequireUniqueEmail = true
       };
 
       //Configure validation logic for passwords
-      manager.PasswordValidator = new PasswordValidator
-      {
+      manager.PasswordValidator = new PasswordValidator {
         RequiredLength = 6,
         RequireNonLetterOrDigit = true,
         RequireDigit = true,
