@@ -6,7 +6,6 @@ using Microsoft.Owin;
 using Ignia.Workbench.DeconstructedWebApi.Models;
 
 namespace Ignia.Workbench.DeconstructedWebApi {
-  // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
 
   /*===========================================================================================================================
   | CLASS: APPLICATION USER MANAGER
@@ -17,7 +16,7 @@ namespace Ignia.Workbench.DeconstructedWebApi {
   /// </summary>
   public class ApplicationUserManager : UserManager<ApplicationUser> {
 
-    /*-------------------------------------------------------------------------------------------------------------------------
+    /*=========================================================================================================================
     | CONSTRUCTOR
     \------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
@@ -27,19 +26,30 @@ namespace Ignia.Workbench.DeconstructedWebApi {
     public ApplicationUserManager(IUserStore<ApplicationUser> store) : base(store) {
     }
 
-    /*-------------------------------------------------------------------------------------------------------------------------
+    /*=========================================================================================================================
     | CREATE FACTORY METHOD
     \------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
-    ///   A factory method that creates an instance of the <see cref="ApplicationUserManager"/> class based on a set of options and an OWIN context.
+    ///   A factory method that creates an instance of the <see cref="ApplicationUserManager"/> class based on a set of options 
+    ///   and an OWIN context.
     /// </summary>
-    /// <param name="options">Options to be used in configuring this instance of the <see cref="ApplicationUserManager"/> class.</param>
+    /// <param name="options">
+    ///   Options to be used in configuring this instance of the <see cref="ApplicationUserManager"/> class.
+    /// </param>
     /// <param name="context">The OWIN context to be used.</param>
     /// <returns></returns>
     public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) {
 
+      /*-----------------------------------------------------------------------------------------------------------------------
+      | Establish variables
+      \----------------------------------------------------------------------------------------------------------------------*/
+
       //Establishes a new Application User Manager based on the ApplicationUser and ApplicationDbContext classes.
       var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+
+      /*-----------------------------------------------------------------------------------------------------------------------
+      | Configure validation logic
+      \----------------------------------------------------------------------------------------------------------------------*/
 
       //Configure validation logic for user names
       manager.UserValidator = new UserValidator<ApplicationUser>(manager)
@@ -58,13 +68,18 @@ namespace Ignia.Workbench.DeconstructedWebApi {
         RequireUppercase = true,
       };
 
+      /*-----------------------------------------------------------------------------------------------------------------------
+      | Establish data protection 
+      \----------------------------------------------------------------------------------------------------------------------*/
       //If a Data Protection Provider was supplied, use it to create the User Token Provider
       var dataProtectionProvider = options.DataProtectionProvider;
       if (dataProtectionProvider != null) {
         manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
       }
 
-      //Return the Application User Manager object
+      /*-----------------------------------------------------------------------------------------------------------------------
+      | Return user manager
+      \----------------------------------------------------------------------------------------------------------------------*/
       return manager;
 
     }
