@@ -11,7 +11,7 @@ namespace Ignia.Workbench.DeconstructedWebApi {
   | CLASS: APPLICATION USER MANAGER
   \--------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
-  ///   Provides a custom implementation of the <see cref="UserManager{TUser}"/> class, which may be extended on a per 
+  ///   Provides a custom implementation of the <see cref="UserManager{TUser}"/> class, which may be extended on a per
   ///   application basis to add support for custom properties.
   /// </summary>
   public class ApplicationUserManager : UserManager<ApplicationUser> {
@@ -30,7 +30,7 @@ namespace Ignia.Workbench.DeconstructedWebApi {
     | CREATE FACTORY METHOD
     \------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
-    ///   A factory method that creates an instance of the <see cref="ApplicationUserManager"/> class based on a set of options 
+    ///   A factory method that creates an instance of the <see cref="ApplicationUserManager"/> class based on a set of options
     ///   and an OWIN context.
     /// </summary>
     /// <param name="options">
@@ -67,7 +67,7 @@ namespace Ignia.Workbench.DeconstructedWebApi {
       };
 
       /*-----------------------------------------------------------------------------------------------------------------------
-      | Establish data protection 
+      | Establish data protection
       \----------------------------------------------------------------------------------------------------------------------*/
       //If a Data Protection Provider was supplied, use it to create the User Token Provider
       var dataProtectionProvider = options.DataProtectionProvider;

@@ -26,11 +26,13 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     /// <param name="publicClientId">The public client identifier.</param>
     /// <exception cref="System.ArgumentNullException">publicClientId</exception>
     public ApplicationOAuthProvider(string publicClientId) {
+
       if (publicClientId == null) {
         throw new ArgumentNullException("publicClientId");
       }
 
       _publicClientId = publicClientId;
+
     }
 
     /// <summary>
@@ -39,6 +41,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     /// <param name="context">The context.</param>
     /// <returns></returns>
     public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context) {
+
       var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
       ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
@@ -58,6 +61,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
       AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
       context.Validated(ticket);
       context.Request.Context.Authentication.SignIn(cookiesIdentity);
+
     }
 
     /// <summary>
@@ -66,11 +70,13 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     /// <param name="context">The context.</param>
     /// <returns></returns>
     public override Task TokenEndpoint(OAuthTokenEndpointContext context) {
+
       foreach (KeyValuePair<string, string> property in context.Properties.Dictionary) {
         context.AdditionalResponseParameters.Add(property.Key, property.Value);
       }
 
       return Task.FromResult<object>(null);
+
     }
 
     /// <summary>
@@ -79,12 +85,14 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     /// <param name="context">The context.</param>
     /// <returns></returns>
     public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context) {
+
       // Resource owner password credentials does not provide a client ID.
       if (context.ClientId == null) {
         context.Validated();
       }
 
       return Task.FromResult<object>(null);
+
     }
 
     /// <summary>
@@ -93,6 +101,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     /// <param name="context">The context.</param>
     /// <returns></returns>
     public override Task ValidateClientRedirectUri(OAuthValidateClientRedirectUriContext context) {
+
       if (context.ClientId == _publicClientId) {
         Uri expectedRootUri = new Uri(context.Request.Uri, "/");
 
@@ -102,6 +111,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
       }
 
       return Task.FromResult<object>(null);
+
     }
 
     /// <summary>
@@ -110,10 +120,14 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     /// <param name="userName">Name of the user.</param>
     /// <returns></returns>
     public static AuthenticationProperties CreateProperties(string userName) {
+
       IDictionary<string, string> data = new Dictionary<string, string> {
         { "userName", userName }
       };
+
       return new AuthenticationProperties(data);
+
     }
-  }
-}
+
+  } //Class
+} //Namespace
