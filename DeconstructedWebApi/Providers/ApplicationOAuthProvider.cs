@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using Ignia.Workbench.DeconstructedWebApi.Models;
+using Ignia.Workbench.Models;
 
 namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
@@ -44,7 +44,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
       var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
-      ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
+      User user = await userManager.FindAsync(context.UserName, context.Password);
 
       if (user == null) {
         context.SetError("invalid_grant", "The user name or password is incorrect.");

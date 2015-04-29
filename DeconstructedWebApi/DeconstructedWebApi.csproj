@@ -172,14 +172,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BindingModels\SetPasswordBindingModel.cs" />
     <Compile Include="Models\BindingModels\RemoveLoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\RegisterExternalBindingModel.cs" />
     <Compile Include="Models\BindingModels\RegisterBindingModel.cs" />
     <Compile Include="Models\BindingModels\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\BindingModels\AddExternalLoginBindingModel.cs" />
-    <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\ViewModels\ExternalLoginViewModel.cs" />
     <Compile Include="Models\ViewModels\ManageInfoViewModel.cs" />
     <Compile Include="Models\ViewModels\UserInfoViewModel.cs" />
@@ -190,10 +189,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\aspnet-Ignia.Workbench.DeconstructedWebApi-20150422121639.mdf" />
-    <Content Include="App_Data\aspnet-Ignia.Workbench.DeconstructedWebApi-20150422121639_log.ldf">
-      <DependentUpon>aspnet-Ignia.Workbench.DeconstructedWebApi-20150422121639.mdf</DependentUpon>
-    </Content>
     <Content Include="Global.asax" />
     <Content Include="Index.html" />
     <Content Include="Web.config" />
@@ -204,7 +199,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

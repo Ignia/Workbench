@@ -52,11 +52,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommentCollection.cs" />
+    <Compile Include="PostCollection.cs" />
+    <Compile Include="UserCollection.cs" />
+    <Compile Include="WorkbenchContext.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WorkbenchContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
