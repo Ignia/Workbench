@@ -48,10 +48,11 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
         return;
       }
 
-      ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
-         OAuthDefaults.AuthenticationType);
-      ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
-          CookieAuthenticationDefaults.AuthenticationType);
+      ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager, OAuthDefaults.AuthenticationType);
+      ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(
+        userManager, 
+        CookieAuthenticationDefaults.AuthenticationType
+        );
 
       AuthenticationProperties properties = CreateProperties(user.UserName);
       AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
@@ -109,10 +110,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     /// <param name="userName">Name of the user.</param>
     /// <returns></returns>
     public static AuthenticationProperties CreateProperties(string userName) {
-      IDictionary<string, string> data = new Dictionary<string, string>
-            {
-                { "userName", userName }
-            };
+      IDictionary<string, string> data = new Dictionary<string, string> {
+        { "userName", userName }
+      };
       return new AuthenticationProperties(data);
     }
   }
