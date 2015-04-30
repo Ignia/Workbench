@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using System.Web.Http.OData.Builder;
+using System.Web.Http.OData.Extensions;
+using Ignia.Workbench.Models;
 
 namespace Ignia.Workbench.DeconstructedWebApi {
 
@@ -36,6 +39,12 @@ namespace Ignia.Workbench.DeconstructedWebApi {
         routeTemplate: "api/{controller}/{id}",
         defaults: new { id = RouteParameter.Optional }
       );
+
+      ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+      builder.EntitySet<Post>("Posts");
+      builder.EntitySet<Comment>("Comments");
+      builder.EntitySet<User>("Users");
+      config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
 
     }
 
