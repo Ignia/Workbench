@@ -21,6 +21,10 @@ namespace Ignia.Workbench.Models {
     /// </summary>
     public User() : base() {
       DateCreated = DateTime.Now;
+      Followers = new UserCollection();
+      Following = new UserCollection();
+      LikedComments = new CommentCollection();
+      LikedPosts = new PostCollection();
     }
 
     /// <summary>
@@ -69,7 +73,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users that the user is following.
     /// </value>
-    public virtual ICollection<User> Followers { get; set; }
+    public virtual UserCollection Followers { get; set; }
 
     /// <summary>
     ///   Gets or sets a collection of users that are following the user.
@@ -77,7 +81,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users that are following the user.
     /// </value>
-    public virtual ICollection<User> Following { get; set; }
+    public virtual UserCollection Following { get; set; }
 
     /// <summary>
     ///   Gets or sets a collection of comments that the user has liked.

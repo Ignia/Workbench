@@ -18,6 +18,7 @@ namespace Ignia.Workbench.Models {
     /// </summary>
     public Comment() {
       DateCreated = DateTime.Now;
+      Likes = new UserCollection();
     }
 
     /// <summary>
@@ -75,7 +76,6 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The identifier of the user.
     /// </value>
-    [Required]
     public string UserId { get; set; }
 
     /// <summary>
