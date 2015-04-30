@@ -20,7 +20,7 @@ namespace Ignia.Workbench.Models {
   ///   Collection of users keyed by Id.
   /// </summary>
   /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{String,User}"/>
-  public class UserCollection : KeyedCollection<string, User> {
+  public class UserCollection : Collection<User> {
 
     /// <summary>
     ///   Initializes a new instance of the UserCollection class.
@@ -34,8 +34,8 @@ namespace Ignia.Workbench.Models {
     /// <returns>
     ///   The key for item.
     /// </returns>
-    protected override string GetKeyForItem(User user) {
-      return user.Id;
-      }
+    //protected override string GetKeyForItem(User user) {
+    //  return user.Id;
+    //  }
     }
   }

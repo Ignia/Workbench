@@ -9,6 +9,7 @@
 \=============================================================================================================================*/
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace Ignia.Workbench.Models {
   ///   Collection of comments keyed by Id.
   /// </summary>
   /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{System.Int32,BlackCane.Mask.Comment}"/>
-  public class CommentCollection : KeyedCollection<int, Comment> {
+  public class CommentCollection : Collection<Comment> {
 
     /// <summary>
     ///   Initializes a new instance of the CommentCollection class.
@@ -34,9 +35,12 @@ namespace Ignia.Workbench.Models {
     /// <returns>
     ///   The key for item.
     /// </returns>
-    protected override int GetKeyForItem(Comment comment) {
-      return comment.Id;
-      }
+    //protected override int GetKeyForItem(Comment comment) {
+    //  return comment.Id;
+    //  }
 
+    public static implicit operator CommentCollection(HashSet<User> v) {
+      throw new NotImplementedException();
     }
+  }
   }
