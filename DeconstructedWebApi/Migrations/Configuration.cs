@@ -1,32 +1,101 @@
-namespace Ignia.Workbench.DeconstructedWebApi.Migrations
-{
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
+namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
+  using System;
+  using System.Data.Entity;
+  using System.Data.Entity.Migrations;
+  using System.Linq;
+  using Ignia.Workbench.Models;
+  using Microsoft.AspNet.Identity;
+  using Microsoft.AspNet.Identity.EntityFramework;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Ignia.Workbench.Models.WorkbenchContext>
-    {
-        public Configuration()
-        {
-            AutomaticMigrationsEnabled = true;
-            ContextKey = "Ignia.Workbench.Models.WorkbenchContext";
-        }
-
-        protected override void Seed(Ignia.Workbench.Models.WorkbenchContext context)
-        {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
-        }
+  internal sealed class Configuration : DbMigrationsConfiguration<Ignia.Workbench.Models.WorkbenchContext> {
+    public Configuration() {
+      AutomaticMigrationsEnabled = true;
+      ContextKey = "Ignia.Workbench.Models.WorkbenchContext";
     }
+
+    protected override void Seed(Ignia.Workbench.Models.WorkbenchContext context) {
+      //  This method will be called after migrating to the latest version.
+
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Create Users
+      \-----------------------------------------------------------------------------------------------------------------------*/
+      var manager = new UserManager<User>(new UserStore<User>(new WorkbenchContext()));
+
+      //Create "Jeremy" user
+      var jeremy = new User() {
+        UserName = "Jeremy",
+        Email = "Jeremy@Ignia.com"
+      };
+
+      //Create "Katherine" user
+      var katherine = new User() {
+        UserName = "Katherine",
+        Email = "Katie@Ignia.com"
+      };
+
+      //Establish credentials
+      manager.Create(jeremy, "15Password#");
+      manager.Create(katherine, "15Password#");
+
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Add followers (friends)
+      \-----------------------------------------------------------------------------------------------------------------------*/
+      jeremy.Followers.Add(katherine);
+      katherine.Followers.Add(jeremy);
+
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Create posts
+      \-----------------------------------------------------------------------------------------------------------------------*/
+      var post1 = new Post { Title = "The first post!", Body = "Content", User = jeremy };
+      var post2 = new Post { Title = "My first post!", Body = "Content", User = katherine };
+      var post3 = new Post { Title = "Another post.", Body = "Content", User = jeremy };
+
+      context.Posts.AddOrUpdate(
+        post => post.Title,
+        post1,
+        post2,
+        post3 
+      );
+
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Like posts
+      \-----------------------------------------------------------------------------------------------------------------------*/
+      post1.Likes.Add(katherine);
+      post2.Likes.Add(jeremy);
+      post2.Likes.Add(katherine);
+      post2.Likes.Add(jeremy);
+
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Tag users
+      \-----------------------------------------------------------------------------------------------------------------------*/
+      post1.TaggedUsers.Add(katherine);
+      post2.TaggedUsers.Add(katherine);
+      post2.TaggedUsers.Add(jeremy);
+
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Create comments
+      \-----------------------------------------------------------------------------------------------------------------------*/
+      var comment1 = new Comment { Post = post1, Body = "Interesting!", User = jeremy };
+      var comment2 = new Comment { Post = post2, Body = "Confusing!", User = jeremy };
+      var comment3 = new Comment { Post = post3, Body = "OK.", User = katherine };
+      var comment4 = new Comment { Post = post3, Body = "Why?", User = jeremy };
+
+      context.Comments.AddOrUpdate(
+        comment => comment.Body,
+        comment1,
+        comment2,
+        comment3,
+        comment4
+      );
+
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Like comments
+      \-----------------------------------------------------------------------------------------------------------------------*/
+      comment1.Likes.Add(katherine);
+      comment2.Likes.Add(jeremy);
+      comment2.Likes.Add(katherine);
+
+
+    }
+  }
 }
