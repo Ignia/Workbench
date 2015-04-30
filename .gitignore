@@ -3,3 +3,5 @@
 */bin/**/*
 */obj/**/*
 *.sln.ide/*.*
+*.mdf
+*.ldf
