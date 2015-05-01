@@ -27,8 +27,9 @@ namespace FullWebApi.Models {
   }
 
   public class ApplicationDbContext : IdentityDbContext<ApplicationUser> {
-    public ApplicationDbContext()
-        : base("DefaultConnection", throwIfV1Schema: false) {
+    public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false) {
+    //this.Configuration.LazyLoadingEnabled = false;
+    //this.Configuration.ProxyCreationEnabled = false;
     }
 
     public System.Data.Entity.DbSet<BlogPost> BlogPosts { get; set; }
