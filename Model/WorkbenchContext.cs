@@ -27,11 +27,11 @@ namespace Ignia.Workbench.Models {
       //POST COMMENTS (1:N)
       //###HACK JJC102213: Must disable cascading delete, otherwise a cyclical dependency will occur.
       //###TODO JJC102213: Determine if this prevents posts from being deleted when a user is deleted, or vice versa.
-      modelBuilder.Entity<Comment>()
-        .HasRequired(comment => comment.Post)
-        .WithMany(post => post.Comments)
-        .HasForeignKey(comment => comment.PostId)
-        .WillCascadeOnDelete(false);
+      //modelBuilder.Entity<Comment>()
+      //  .HasRequired(comment => comment.Post)
+      //  .WithMany(post => post.Comments)
+      //  .HasForeignKey(comment => comment.PostId)
+      //  .WillCascadeOnDelete(false);
 
       //USER'S POSTS (1:N)
       //###HACK JJC102213: Must disable cascading delete, otherwise a cyclical dependency will occur.
