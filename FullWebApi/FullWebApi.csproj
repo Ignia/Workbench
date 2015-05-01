@@ -51,6 +51,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
@@ -215,6 +216,7 @@
     <Compile Include="Controllers\BlogPostsController.cs" />
     <Compile Include="Controllers\BlogPostsOdataController.cs" />
     <Compile Include="Controllers\CommentsController.cs" />
+    <Compile Include="Controllers\CommentsOdataController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -226,6 +228,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CommentCollection.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
