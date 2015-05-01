@@ -68,10 +68,10 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       /*------------------------------------------------------------------------------------------------------------------------
       | Create comments
       \-----------------------------------------------------------------------------------------------------------------------*/
-      var comment1 = new Comment { Id = 1, PostId = post1.Id, Body = "Interesting!", UserId = jeremy.Id, User = jeremy };
-      var comment2 = new Comment { Id = 2, PostId = post2.Id, Body = "Confusing!", UserId = jeremy.Id, User = jeremy };
-      var comment3 = new Comment { Id = 3, PostId = post3.Id, Body = "OK.", UserId = katherine.Id, User = katherine };
-      var comment4 = new Comment { Id = 4, PostId = post3.Id, Body = "Why?", UserId = jeremy.Id, User = jeremy };
+      var comment1 = new Comment { Id = 1, PostId = post1.Id, Post = post1, Body = "Interesting!", UserId = jeremy.Id, User = jeremy };
+      var comment2 = new Comment { Id = 2, PostId = post2.Id, Post = post2, Body = "Confusing!", UserId = jeremy.Id, User = jeremy };
+      var comment3 = new Comment { Id = 3, PostId = post3.Id, Post = post3, Body = "OK.", UserId = katherine.Id, User = katherine };
+      var comment4 = new Comment { Id = 4, PostId = post3.Id, Post = post3, Body = "Why?", UserId = jeremy.Id, User = jeremy };
 
       context.Comments.AddOrUpdate(
         comment => comment.Id,
