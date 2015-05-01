@@ -10,7 +10,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
   using System.Text;
 
   /// <summary>
-  /// 
+  ///   Provides configuration settingsfor Entity Framework migrations, including a method for seeding the database.
   /// </summary>
   internal sealed class Configuration : DbMigrationsConfiguration<Ignia.Workbench.Models.WorkbenchContext> {
 
