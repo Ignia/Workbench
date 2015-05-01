@@ -26,15 +26,11 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       var jeremy     = CreateUser(manager, "Jeremy",    "Jeremy@Ignia.com",    "15Password#");
       var katherine  = CreateUser(manager, "Katherine", "Katherine@Ignia.com", "15Password#");
 
-      //Retrieve users
-      jeremy = (User)manager.Users.Where<User>(u => u.UserName == "Jeremy").FirstOrDefault<User>();
-      katherine = (User)manager.Users.Where<User>(u => u.UserName == "Katherine").FirstOrDefault<User>();
-
       /*------------------------------------------------------------------------------------------------------------------------
       | Add followers (friends)
       \-----------------------------------------------------------------------------------------------------------------------*/
-      jeremy.Followers.Add(katherine);
-      katherine.Followers.Add(jeremy);
+      if (jeremy.Followers.Count == 0) jeremy.Followers.Add(katherine);
+      if (katherine.Followers.Count == 0) katherine.Followers.Add(jeremy);
 
       /*------------------------------------------------------------------------------------------------------------------------
       | Create posts
@@ -42,6 +38,17 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       var post1 = new Post() { Id = 1, Title = "The first post!", Body = "Content 1", UserId = jeremy.Id };
       var post2 = new Post() { Id = 2, Title = "My first post!", Body = "Content 2", UserId = katherine.Id };
       var post3 = new Post() { Id = 3, Title = "Another post.", Body = "Content 3", UserId = jeremy.Id };
+
+      //Like posts
+      post1.Likes.Add(katherine);
+      post2.Likes.Add(jeremy);
+      post2.Likes.Add(katherine);
+      post3.Likes.Add(jeremy);
+
+      //Tag users
+      post1.TaggedUsers.Add(katherine);
+      post2.TaggedUsers.Add(katherine);
+      post2.TaggedUsers.Add(jeremy);
 
       context.Posts.AddOrUpdate(
         post => post.Id,
@@ -51,27 +58,17 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       );
 
       /*------------------------------------------------------------------------------------------------------------------------
-      | Like posts
-      \-----------------------------------------------------------------------------------------------------------------------*/
-      post1.Likes.Add(katherine);
-      post2.Likes.Add(jeremy);
-      post2.Likes.Add(katherine);
-      post3.Likes.Add(jeremy);
-
-      /*------------------------------------------------------------------------------------------------------------------------
-      | Tag users
-      \-----------------------------------------------------------------------------------------------------------------------*/
-      post1.TaggedUsers.Add(katherine);
-      post2.TaggedUsers.Add(katherine);
-      post2.TaggedUsers.Add(jeremy);
-
-      /*------------------------------------------------------------------------------------------------------------------------
       | Create comments
       \-----------------------------------------------------------------------------------------------------------------------*/
       var comment1 = new Comment { Id = 1, PostId = post1.Id, Post = post1, Body = "Interesting!", UserId = jeremy.Id, User = jeremy };
       var comment2 = new Comment { Id = 2, PostId = post2.Id, Post = post2, Body = "Confusing!", UserId = jeremy.Id, User = jeremy };
       var comment3 = new Comment { Id = 3, PostId = post3.Id, Post = post3, Body = "OK.", UserId = katherine.Id, User = katherine };
       var comment4 = new Comment { Id = 4, PostId = post3.Id, Post = post3, Body = "Why?", UserId = jeremy.Id, User = jeremy };
+
+      //Like comments
+      comment1.Likes.Add(katherine);
+      comment2.Likes.Add(jeremy);
+      comment2.Likes.Add(katherine);
 
       context.Comments.AddOrUpdate(
         comment => comment.Id,
@@ -80,13 +77,6 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
         comment3,
         comment4
       );
-
-      /*------------------------------------------------------------------------------------------------------------------------
-      | Like comments
-      \-----------------------------------------------------------------------------------------------------------------------*/
-      comment1.Likes.Add(katherine);
-      comment2.Likes.Add(jeremy);
-      comment2.Likes.Add(katherine);
 
       /*------------------------------------------------------------------------------------------------------------------------
       | Save changes
