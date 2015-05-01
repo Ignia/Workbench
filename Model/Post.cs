@@ -74,7 +74,7 @@ namespace Ignia.Workbench.Models {
     /// </value>
     [Required]
     [ForeignKey("UserId")]
-    public User User { get; set; }
+    public virtual User User { get; set; }
 
     /// <summary>
     ///   Gets or sets the Date/Time that the Post was created.
@@ -91,6 +91,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users who liked this post.
     /// </value>
+    [InverseProperty("LikedPosts")]
     public virtual UserCollection Likes { get; set; }
 
     /// <summary>
@@ -99,6 +100,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The comments associated with this post.
     /// </value>
+    [InverseProperty("Post")]
     public virtual CommentCollection Comments { get; set; }
 
     /// <summary>
@@ -107,6 +109,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users tagged in this post.
     /// </value>
+    [InverseProperty("TaggedInPosts")]
     public virtual UserCollection TaggedUsers { get; set; }
     
     /// <summary>

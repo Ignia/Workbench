@@ -49,6 +49,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The comments the user has submitted.
     /// </value>
+    [InverseProperty("User")]
     public virtual CommentCollection Comments { get; set; }
 
     /// <summary>
@@ -57,6 +58,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The posts the user has submitted.
     /// </value>
+    [InverseProperty("User")]
     public virtual PostCollection Posts { get; set; }
 
     /// <summary>
@@ -65,6 +67,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   Posts the user is tagged in.
     /// </value>
+    [InverseProperty("TaggedUsers")]
     public virtual PostCollection TaggedInPosts { get; set; }
 
     /// <summary>
@@ -73,6 +76,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users that the user is following.
     /// </value>
+    [InverseProperty("Following")]
     public virtual UserCollection Followers { get; set; }
 
     /// <summary>
@@ -81,6 +85,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users that are following the user.
     /// </value>
+    [InverseProperty("Followers")]
     public virtual UserCollection Following { get; set; }
 
     /// <summary>
@@ -89,6 +94,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The comments that the user has liked.
     /// </value>
+    [InverseProperty("Likes")]
     public virtual CommentCollection LikedComments { get; set; }
 
     /// <summary>
@@ -97,6 +103,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The posts that the user has liked.
     /// </value>
+    [InverseProperty("Likes")]
     public virtual PostCollection LikedPosts { get; set; }
 
     /// <summary>
@@ -106,7 +113,7 @@ namespace Ignia.Workbench.Models {
     ///   The date the user was created.
     /// </value>
     [Required]
-    public virtual DateTime DateCreated { get; set; }
+    public DateTime DateCreated { get; set; }
 
     /// <summary>
     ///   Gets or sets the time stamp, which is a byte array representing the time when the object was last updated.  ADO.NET

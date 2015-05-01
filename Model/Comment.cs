@@ -28,7 +28,7 @@ namespace Ignia.Workbench.Models {
     ///   The identifier.
     /// </value>
     [Column("CommentID")]
-    public virtual int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     ///   Gets or sets the body text of the comment.  A comment must be no shorter than two characters, and is currently restricted to a maximum length of 500 characters.
@@ -40,7 +40,7 @@ namespace Ignia.Workbench.Models {
      MaxLength(500, ErrorMessage = "Comment body must be no more than 500 characters."),
      MinLength(2, ErrorMessage = "Comment body must be at least two characters.")
      ]
-    public virtual String Body { get; set; }
+    public String Body { get; set; }
 
     /// <summary>
     ///   Gets or sets the Date/Time of when the comment was created.
@@ -49,7 +49,7 @@ namespace Ignia.Workbench.Models {
     ///   The date created.
     /// </value>
     [Required]
-    public virtual DateTime DateCreated { get; set; }
+    public DateTime DateCreated { get; set; }
 
     /// <summary>
     ///   Gets or sets the identifier of the post that this comment is in response to.
@@ -57,7 +57,6 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The identifier of the post.
     /// </value>
-    [Required]
     public int PostId { get; set; }
 
     /// <summary>
@@ -66,9 +65,8 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The post.
     /// </value>
-    [Required]
     [ForeignKey("PostId")]
-    public Post Post { get; set; }
+    public virtual Post Post { get; set; }
 
     /// <summary>
     ///   Gets or sets the identifier of the user that created this comment.
@@ -86,7 +84,7 @@ namespace Ignia.Workbench.Models {
     /// </value>
     [Required]
     [ForeignKey("UserId")]
-    public User User { get; set; }
+    public virtual User User { get; set; }
 
     /// <summary>
     ///   Gets or sets the collection of users who liked this comment.
@@ -94,6 +92,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users who liked this comment.
     /// </value>
+    [InverseProperty("LikedComments")]
     public virtual UserCollection Likes { get; set; }
 
     /// <summary>
