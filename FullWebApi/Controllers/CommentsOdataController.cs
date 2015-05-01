@@ -22,31 +22,31 @@ namespace FullWebApi.Controllers
     using System.Web.Http.OData.Extensions;
     using FullWebApi.Models;
     ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<BlogPost>("BlogPostsOdata");
-    builder.EntitySet<Comment>("Comments"); 
-    builder.EntitySet<ApplicationUser>("Users"); 
+    builder.EntitySet<Comment>("CommentsOdata");
+    builder.EntitySet<BlogPost>("BlogPosts"); 
+    builder.EntitySet<ApplicationUser>("ApplicationUsers"); 
     config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
-    public class BlogPostsOdataController : ODataController
+    public class CommentsOdataController : ODataController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: odata/BlogPostsOdata
+        // GET: odata/CommentsOdata
         [EnableQuery]
-        public IQueryable<BlogPost> GetBlogPostsOdata()
+        public IQueryable<Comment> GetCommentsOdata()
         {
-            return db.BlogPosts;
+            return db.Comments;
         }
 
-        // GET: odata/BlogPostsOdata(5)
+        // GET: odata/CommentsOdata(5)
         [EnableQuery]
-        public SingleResult<BlogPost> GetBlogPost([FromODataUri] int key)
+        public SingleResult<Comment> GetComment([FromODataUri] int key)
         {
-            return SingleResult.Create(db.BlogPosts.Where(blogPost => blogPost.Id == key));
+            return SingleResult.Create(db.Comments.Where(comment => comment.Id == key));
         }
 
-        // PUT: odata/BlogPostsOdata(5)
-        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<BlogPost> patch)
+        // PUT: odata/CommentsOdata(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Comment> patch)
         {
             Validate(patch.GetEntity());
 
@@ -55,13 +55,13 @@ namespace FullWebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            BlogPost blogPost = await db.BlogPosts.FindAsync(key);
-            if (blogPost == null)
+            Comment comment = await db.Comments.FindAsync(key);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            patch.Put(blogPost);
+            patch.Put(comment);
 
             try
             {
@@ -69,7 +69,7 @@ namespace FullWebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BlogPostExists(key))
+                if (!CommentExists(key))
                 {
                     return NotFound();
                 }
@@ -79,26 +79,26 @@ namespace FullWebApi.Controllers
                 }
             }
 
-            return Updated(blogPost);
+            return Updated(comment);
         }
 
-        // POST: odata/BlogPostsOdata
-        public async Task<IHttpActionResult> Post(BlogPost blogPost)
+        // POST: odata/CommentsOdata
+        public async Task<IHttpActionResult> Post(Comment comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.BlogPosts.Add(blogPost);
+            db.Comments.Add(comment);
             await db.SaveChangesAsync();
 
-            return Created(blogPost);
+            return Created(comment);
         }
 
-        // PATCH: odata/BlogPostsOdata(5)
+        // PATCH: odata/CommentsOdata(5)
         [AcceptVerbs("PATCH", "MERGE")]
-        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<BlogPost> patch)
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Comment> patch)
         {
             Validate(patch.GetEntity());
 
@@ -107,13 +107,13 @@ namespace FullWebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            BlogPost blogPost = await db.BlogPosts.FindAsync(key);
-            if (blogPost == null)
+            Comment comment = await db.Comments.FindAsync(key);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            patch.Patch(blogPost);
+            patch.Patch(comment);
 
             try
             {
@@ -121,7 +121,7 @@ namespace FullWebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BlogPostExists(key))
+                if (!CommentExists(key))
                 {
                     return NotFound();
                 }
@@ -131,36 +131,36 @@ namespace FullWebApi.Controllers
                 }
             }
 
-            return Updated(blogPost);
+            return Updated(comment);
         }
 
-        // DELETE: odata/BlogPostsOdata(5)
+        // DELETE: odata/CommentsOdata(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
-            BlogPost blogPost = await db.BlogPosts.FindAsync(key);
-            if (blogPost == null)
+            Comment comment = await db.Comments.FindAsync(key);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            db.BlogPosts.Remove(blogPost);
+            db.Comments.Remove(comment);
             await db.SaveChangesAsync();
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: odata/BlogPostsOdata(5)/Comments
+        // GET: odata/CommentsOdata(5)/BlogPost
         [EnableQuery]
-        public IQueryable<Comment> GetComments([FromODataUri] int key)
+        public SingleResult<BlogPost> GetBlogPost([FromODataUri] int key)
         {
-            return db.BlogPosts.Where(m => m.Id == key).SelectMany(m => m.Comments);
+            return SingleResult.Create(db.Comments.Where(m => m.Id == key).Select(m => m.BlogPost));
         }
 
-        // GET: odata/BlogPostsOdata(5)/User
+        // GET: odata/CommentsOdata(5)/User
         [EnableQuery]
         public SingleResult<ApplicationUser> GetUser([FromODataUri] int key)
         {
-            return SingleResult.Create(db.BlogPosts.Where(m => m.Id == key).Select(m => m.User));
+            return SingleResult.Create(db.Comments.Where(m => m.Id == key).Select(m => m.User));
         }
 
         protected override void Dispose(bool disposing)
@@ -172,9 +172,9 @@ namespace FullWebApi.Controllers
             base.Dispose(disposing);
         }
 
-        private bool BlogPostExists(int key)
+        private bool CommentExists(int key)
         {
-            return db.BlogPosts.Count(e => e.Id == key) > 0;
+            return db.Comments.Count(e => e.Id == key) > 0;
         }
     }
 }

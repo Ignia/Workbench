@@ -28,6 +28,7 @@ namespace FullWebApi {
 
       ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
       builder.EntitySet<BlogPost>("BlogPostsOdata");
+      builder.EntitySet<Comment>("CommentsOdata");
       builder.EntitySet<ApplicationUser>("ApplicationUsers");
       config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
 
