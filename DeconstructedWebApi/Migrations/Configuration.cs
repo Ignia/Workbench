@@ -22,22 +22,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       \-----------------------------------------------------------------------------------------------------------------------*/
       var manager = new UserManager<User>(new UserStore<User>(context));
 
-      //Create "Jeremy" user
-      var jeremy = new User() {
-        UserName = "Jeremy",
-        Email = "Jeremy@Ignia.com"
-      };
-
-      //Create "Katherine" user
-      var katherine = new User() {
-        UserName = "Katherine",
-        Email = "Katie@Ignia.com"
-      };
-
-      //Establish credentials
-      manager.Create(jeremy, "15Password#");
-      manager.Create(katherine, "15Password#");
-
+      var jeremy = CreateUser(manager, "Jeremy", "Jeremy@Ignia.com", "15Password#");
+      var katherine = CreateUser(manager, "Katherine", "Katherine@Ignia.com", "15Password#");
+ 
       /*------------------------------------------------------------------------------------------------------------------------
       | Add followers (friends)
       \-----------------------------------------------------------------------------------------------------------------------*/
@@ -96,9 +83,49 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       comment2.Likes.Add(jeremy);
       comment2.Likes.Add(katherine);
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Save changes
+      \-----------------------------------------------------------------------------------------------------------------------*/
       context.SaveChanges();
 
     }
 
+    private User CreateUser(UserManager<User> manager, string username, string email, string password) {
+
+      //Check if user exists
+      var user = GetUser(manager, username);
+
+      //Create user
+      if (user == null) {
+        user = new User() {
+          UserName = username,
+          Email = email
+        };
+
+        //Establish credentials
+        manager.Create(user, password);
+
+        //Retrieve newly created user
+        user = GetUser(manager, username);
+      }
+
+      //Return user
+      return user;
+
+    }
+
+    private User GetUser(UserManager<User> manager, string username) {
+
+      //Retrieve user
+      var user = manager
+        .Users
+        .Where<User>(u => u.UserName == username)
+        .FirstOrDefault<User>();
+
+      //Return user
+      return user;
+    }
+
+
+    }
   }
-}
