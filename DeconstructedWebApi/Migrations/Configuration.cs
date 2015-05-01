@@ -9,13 +9,21 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
   using System.Data.Entity.Validation;
   using System.Text;
 
+  /// <summary>
+  /// 
+  /// </summary>
   internal sealed class Configuration : DbMigrationsConfiguration<Ignia.Workbench.Models.WorkbenchContext> {
 
+    /// <summary>Initializes a new instance of the <see cref="Configuration"/> class.</summary>
     public Configuration() {
       AutomaticMigrationsEnabled = true;
       ContextKey = "Ignia.Workbench.Models.WorkbenchContext";
     }
 
+    /// <summary>
+    ///   Seeds the database anytime a migration is executed.
+    /// </summary>
+    /// <param name="context">The Entity Framework context.</param>
     protected override void Seed(Ignia.Workbench.Models.WorkbenchContext context) {
 
       /*------------------------------------------------------------------------------------------------------------------------
@@ -85,6 +93,14 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
 
     }
 
+    /// <summary>
+    ///   Looks up a user and, if they don't exist, creates a user record.
+    /// </summary>
+    /// <param name="manager">The user manager to use to create the user.</param>
+    /// <param name="username">The requested username; will also be used as the key to determine if the user exists.</param>
+    /// <param name="email">The requested email.</param>
+    /// <param name="password">The requested password.</param>
+    /// <returns></returns>
     private User CreateUser(UserManager<User> manager, string username, string email, string password) {
 
       //Check if user exists
@@ -111,6 +127,12 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
 
     }
 
+    /// <summary>
+    ///   Gets a reference to the user from the <see cref="UserManager{TUser, TKey}"/>. If the user cannot be found, returns null.
+    /// </summary>
+    /// <param name="manager">The user manager to use to create the user.</param>
+    /// <param name="username">The username; will be used as the key to determine if the user exists.</param>
+    /// <returns></returns>
     private User GetUser(UserManager<User> manager, string username) {
 
       //Retrieve user
