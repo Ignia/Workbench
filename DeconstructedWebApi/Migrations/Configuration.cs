@@ -10,6 +10,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
   using System.Text;
 
   internal sealed class Configuration : DbMigrationsConfiguration<Ignia.Workbench.Models.WorkbenchContext> {
+
     public Configuration() {
       AutomaticMigrationsEnabled = true;
       ContextKey = "Ignia.Workbench.Models.WorkbenchContext";
@@ -20,11 +21,15 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       /*------------------------------------------------------------------------------------------------------------------------
       | Create Users
       \-----------------------------------------------------------------------------------------------------------------------*/
-      var manager = new UserManager<User>(new UserStore<User>(context));
+      var manager    = new UserManager<User>(new UserStore<User>(context));
 
-      var jeremy = CreateUser(manager, "Jeremy", "Jeremy@Ignia.com", "15Password#");
-      var katherine = CreateUser(manager, "Katherine", "Katherine@Ignia.com", "15Password#");
- 
+      var jeremy     = CreateUser(manager, "Jeremy",    "Jeremy@Ignia.com",    "15Password#");
+      var katherine  = CreateUser(manager, "Katherine", "Katherine@Ignia.com", "15Password#");
+
+      //Retrieve users
+      jeremy = (User)manager.Users.Where<User>(u => u.UserName == "Jeremy").FirstOrDefault<User>();
+      katherine = (User)manager.Users.Where<User>(u => u.UserName == "Katherine").FirstOrDefault<User>();
+
       /*------------------------------------------------------------------------------------------------------------------------
       | Add followers (friends)
       \-----------------------------------------------------------------------------------------------------------------------*/
@@ -34,9 +39,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       /*------------------------------------------------------------------------------------------------------------------------
       | Create posts
       \-----------------------------------------------------------------------------------------------------------------------*/
-      var post1 = new Post() { Id = 1, Title = "The first post!", Body = "Content 1", User = jeremy };
-      var post2 = new Post() { Id = 2, Title = "My first post!", Body = "Content 2", User = katherine };
-      var post3 = new Post() { Id = 3, Title = "Another post.", Body = "Content 3", User = jeremy };
+      var post1 = new Post() { Id = 1, Title = "The first post!", Body = "Content 1", UserId = jeremy.Id };
+      var post2 = new Post() { Id = 2, Title = "My first post!", Body = "Content 2", UserId = katherine.Id };
+      var post3 = new Post() { Id = 3, Title = "Another post.", Body = "Content 3", UserId = jeremy.Id };
 
       context.Posts.AddOrUpdate(
         post => post.Id,
@@ -63,10 +68,10 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       /*------------------------------------------------------------------------------------------------------------------------
       | Create comments
       \-----------------------------------------------------------------------------------------------------------------------*/
-      var comment1 = new Comment { Id = 1, Post = post1, Body = "Interesting!", User = jeremy };
-      var comment2 = new Comment { Id = 2, Post = post2, Body = "Confusing!", User = jeremy };
-      var comment3 = new Comment { Id = 3, Post = post3, Body = "OK.", User = katherine };
-      var comment4 = new Comment { Id = 4, Post = post3, Body = "Why?", User = jeremy };
+      var comment1 = new Comment { Id = 1, PostId = post1.Id, Body = "Interesting!", UserId = jeremy.Id, User = jeremy };
+      var comment2 = new Comment { Id = 2, PostId = post2.Id, Body = "Confusing!", UserId = jeremy.Id, User = jeremy };
+      var comment3 = new Comment { Id = 3, PostId = post3.Id, Body = "OK.", UserId = katherine.Id, User = katherine };
+      var comment4 = new Comment { Id = 4, PostId = post3.Id, Body = "Why?", UserId = jeremy.Id, User = jeremy };
 
       context.Comments.AddOrUpdate(
         comment => comment.Id,
@@ -97,6 +102,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
 
       //Create user
       if (user == null) {
+
         user = new User() {
           UserName = username,
           Email = email
@@ -107,6 +113,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
 
         //Retrieve newly created user
         user = GetUser(manager, username);
+
       }
 
       //Return user
@@ -117,7 +124,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
     private User GetUser(UserManager<User> manager, string username) {
 
       //Retrieve user
-      var user = manager
+      var user = (User)manager
         .Users
         .Where<User>(u => u.UserName == username)
         .FirstOrDefault<User>();
@@ -126,6 +133,5 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       return user;
     }
 
-
-    }
-  }
+  } //Class
+} //Namespace
