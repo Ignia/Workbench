@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.Linq;
 using System.Text;
 
 namespace Ignia.Workbench.Models {
@@ -38,6 +39,7 @@ namespace Ignia.Workbench.Models {
       modelBuilder.Entity<Post>()
         .HasRequired(post => post.User)
         .WithMany(user => user.Posts)
+        .HasForeignKey(post => post.UserId)
         .WillCascadeOnDelete(false);
 
       //USER'S COMMENTS (1:N)
@@ -46,6 +48,7 @@ namespace Ignia.Workbench.Models {
       modelBuilder.Entity<Comment>()
         .HasRequired(comment => comment.User)
         .WithMany(user => user.Comments)
+        .HasForeignKey(comment => comment.UserId)
         .WillCascadeOnDelete(false);
 
       //USER FOLLOWERS (N:N)
@@ -91,10 +94,20 @@ namespace Ignia.Workbench.Models {
     }
 
     public override int SaveChanges() {
+
       try {
+
+        Comments.Local
+          .Where(c => c.Post == null)
+          .ToList()
+          .ForEach(c => Comments.Remove(c));
+
         return base.SaveChanges();
+
       }
+
       catch (DbEntityValidationException ex) {
+
         var sb = new StringBuilder();
 
         foreach (var failure in ex.EntityValidationErrors) {
@@ -106,12 +119,13 @@ namespace Ignia.Workbench.Models {
         }
 
         throw new DbEntityValidationException(
-            "Entity Validation Failed - errors follow:\n" +
-            sb.ToString(), ex
-            ); // Add the original exception as the innerException
+          "Entity Validation Failed - errors follow:\n" + sb.ToString(), 
+          ex
+        ); // Add the original exception as the innerException
+
       }
+
     }
 
-
-  }
-}
+  } //Class
+} //Namespace
