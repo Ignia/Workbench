@@ -18,10 +18,7 @@ namespace FullWebApi.Models {
 
     public string Title { get; set; }
 
-    public string UserId { get; set; }
-
     [Required]
-    [ForeignKey("UserId")]
     public ApplicationUser User { get; set; }
 
     public virtual ICollection<Comment> Comments { get; set; }

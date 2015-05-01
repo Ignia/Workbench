@@ -44,12 +44,11 @@ namespace FullWebApi.Migrations {
       /*------------------------------------------------------------------------------------------------------------------------
       | Create posts
       \-----------------------------------------------------------------------------------------------------------------------*/
-      var post1 = new BlogPost() { Id = 1, Title = "The first post!", UserId = jeremy.Id, User = jeremy };
-      var post2 = new BlogPost() { Id = 2, Title = "My first post!", UserId = katherine.Id, User = katherine };
-      var post3 = new BlogPost() { Id = 3, Title = "Another post.", UserId = jeremy.Id, User = jeremy };
+      var post1 = new BlogPost() { Id = 1, Title = "The first post!", User = jeremy };
+      var post2 = new BlogPost() { Id = 2, Title = "My first post!", User = katherine };
+      var post3 = new BlogPost() { Id = 3, Title = "Another post.", User = jeremy };
 
       post1.User = jeremy;
-      post1.UserId = jeremy.Id; 
 
       context.BlogPosts.AddOrUpdate(
         blogPost => blogPost.Id,
