@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace Ignia.Workbench.Models {
 
@@ -21,12 +22,13 @@ namespace Ignia.Workbench.Models {
   ///   Collection of posts keyed by Id.
   /// </summary>
   /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{Int32,Post}"/>
-  public class PostCollection : Collection<Post> {
+  public class PostCollection : SynchronizedKeyedCollection<int, Post> {
 
     /// <summary>
     ///   Initializes a new instance of the PostCollection class.
     /// </summary>
-    public PostCollection() { }
+    public PostCollection() {
+    }
 
     /// <summary>
     ///   Gets key for item.  This will provide a means of looking up individual items based on a friendly identifier.  Specifically, this colletion uses the Post.Id as the lookup.
@@ -35,9 +37,9 @@ namespace Ignia.Workbench.Models {
     /// <returns>
     ///   The key for item.
     /// </returns>
-    //protected override int GetKeyForItem(Post post) {
-    //  return post.Id;
-    //  }
-
+    protected override int GetKeyForItem(Post post) {
+      return post.Id;
     }
-  }
+
+  } //Class
+} //Namespace

@@ -9,6 +9,7 @@
 \=============================================================================================================================*/
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace Ignia.Workbench.Models {
   ///   Collection of users keyed by Id.
   /// </summary>
   /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{String,User}"/>
-  public class UserCollection : Collection<User> {
+  public class UserCollection : SynchronizedKeyedCollection<String, User> {
 
     /// <summary>
     ///   Initializes a new instance of the UserCollection class.
@@ -34,8 +35,9 @@ namespace Ignia.Workbench.Models {
     /// <returns>
     ///   The key for item.
     /// </returns>
-    //protected override string GetKeyForItem(User user) {
-    //  return user.Id;
-    //  }
+    protected override string GetKeyForItem(User user) {
+      return user.Id;
     }
-  }
+
+  } //Class
+} //Namespace
