@@ -13,44 +13,44 @@ using FullWebApi.Models;
 
 namespace FullWebApi.Controllers
 {
-    public class CommentsController : ApiController
+    public class BlogPostsController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: api/Comments
-        public IQueryable<Comment> GetComments()
+        // GET: api/BlogPosts
+        public IQueryable<BlogPost> GetBlogPosts()
         {
-            return db.Comments;
+            return db.BlogPosts;
         }
 
-        // GET: api/Comments/5
-        [ResponseType(typeof(Comment))]
-        public async Task<IHttpActionResult> GetComment(int id)
+        // GET: api/BlogPosts/5
+        [ResponseType(typeof(BlogPost))]
+        public async Task<IHttpActionResult> GetBlogPost(int id)
         {
-            Comment comment = await db.Comments.FindAsync(id);
-            if (comment == null)
+            BlogPost blogPost = await db.BlogPosts.FindAsync(id);
+            if (blogPost == null)
             {
                 return NotFound();
             }
 
-            return Ok(comment);
+            return Ok(blogPost);
         }
 
-        // PUT: api/Comments/5
+        // PUT: api/BlogPosts/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutComment(int id, Comment comment)
+        public async Task<IHttpActionResult> PutBlogPost(int id, BlogPost blogPost)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != comment.Id)
+            if (id != blogPost.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(comment).State = EntityState.Modified;
+            db.Entry(blogPost).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace FullWebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CommentExists(id))
+                if (!BlogPostExists(id))
                 {
                     return NotFound();
                 }
@@ -71,35 +71,35 @@ namespace FullWebApi.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Comments
-        [ResponseType(typeof(Comment))]
-        public async Task<IHttpActionResult> PostComment(Comment comment)
+        // POST: api/BlogPosts
+        [ResponseType(typeof(BlogPost))]
+        public async Task<IHttpActionResult> PostBlogPost(BlogPost blogPost)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Comments.Add(comment);
+            db.BlogPosts.Add(blogPost);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = comment.Id }, comment);
+            return CreatedAtRoute("DefaultApi", new { id = blogPost.Id }, blogPost);
         }
 
-        // DELETE: api/Comments/5
-        [ResponseType(typeof(Comment))]
-        public async Task<IHttpActionResult> DeleteComment(int id)
+        // DELETE: api/BlogPosts/5
+        [ResponseType(typeof(BlogPost))]
+        public async Task<IHttpActionResult> DeleteBlogPost(int id)
         {
-            Comment comment = await db.Comments.FindAsync(id);
-            if (comment == null)
+            BlogPost blogPost = await db.BlogPosts.FindAsync(id);
+            if (blogPost == null)
             {
                 return NotFound();
             }
 
-            db.Comments.Remove(comment);
+            db.BlogPosts.Remove(blogPost);
             await db.SaveChangesAsync();
 
-            return Ok(comment);
+            return Ok(blogPost);
         }
 
         protected override void Dispose(bool disposing)
@@ -111,9 +111,9 @@ namespace FullWebApi.Controllers
             base.Dispose(disposing);
         }
 
-        private bool CommentExists(int id)
+        private bool BlogPostExists(int id)
         {
-            return db.Comments.Count(e => e.Id == id) > 0;
+            return db.BlogPosts.Count(e => e.Id == id) > 0;
         }
     }
 }

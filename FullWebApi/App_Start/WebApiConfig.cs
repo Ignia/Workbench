@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using System.Web.Http.OData.Builder;
+using System.Web.Http.OData.Extensions;
+using FullWebApi.Models;
 
 namespace FullWebApi {
   public static class WebApiConfig {
@@ -22,6 +25,12 @@ namespace FullWebApi {
           routeTemplate: "api/{controller}/{id}",
           defaults: new { id = RouteParameter.Optional }
       );
+
+      ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+      builder.EntitySet<BlogPost>("BlogPostsOdata");
+      builder.EntitySet<ApplicationUser>("ApplicationUsers");
+      config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
+
     }
   }
 }
