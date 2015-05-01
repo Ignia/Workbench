@@ -22,7 +22,7 @@ namespace Ignia.Workbench.Models {
   ///   Collection of posts keyed by Id.
   /// </summary>
   /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{Int32,Post}"/>
-  public class PostCollection : SynchronizedKeyedCollection<int, Post> {
+  public class PostCollection : KeyedCollection<int, Post> {
 
     /// <summary>
     ///   Initializes a new instance of the PostCollection class.

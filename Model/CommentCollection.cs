@@ -20,8 +20,8 @@ namespace Ignia.Workbench.Models {
   /// <summary>
   ///   Collection of comments keyed by Id.
   /// </summary>
-  /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{System.Int32,BlackCane.Mask.Comment}"/>
-  public class CommentCollection : SynchronizedKeyedCollection<int, Comment> {
+  /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{Int32,Comment}"/>
+  public class CommentCollection : KeyedCollection<int, Comment> {
 
     /// <summary>
     ///   Initializes a new instance of the CommentCollection class.

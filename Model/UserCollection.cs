@@ -21,7 +21,7 @@ namespace Ignia.Workbench.Models {
   ///   Collection of users keyed by Id.
   /// </summary>
   /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{String,User}"/>
-  public class UserCollection : SynchronizedKeyedCollection<String, User> {
+  public class UserCollection : KeyedCollection<String, User> {
 
     /// <summary>
     ///   Initializes a new instance of the UserCollection class.
