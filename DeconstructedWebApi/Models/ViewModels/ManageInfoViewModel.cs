@@ -4,7 +4,11 @@ using System.Collections.Generic;
 namespace Ignia.Workbench.DeconstructedWebApi.Models {
   // Models returned by AccountController actions.
 
+  /*============================================================================================================================
+  | CLASS: MANAGE INFO (VIEW MODEL)
+  \---------------------------------------------------------------------------------------------------------------------------*/
   public class ManageInfoViewModel {
+
     public string LocalLoginProvider { get; set; }
 
     public string Email { get; set; }
@@ -12,6 +16,6 @@ namespace Ignia.Workbench.DeconstructedWebApi.Models {
     public IEnumerable<UserLoginInfoViewModel> Logins { get; set; }
 
     public IEnumerable<ExternalLoginViewModel> ExternalLoginProviders { get; set; }
-  }
 
-}
+  } //Class
+} //Namespace

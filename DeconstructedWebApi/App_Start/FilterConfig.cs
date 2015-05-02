@@ -3,6 +3,9 @@ using System.Web.Mvc;
 
 namespace Ignia.Workbench.DeconstructedWebApi {
 
+  /*============================================================================================================================
+  | CLASS: FILTER CONFIGURATION
+  \---------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
   ///   Provides a centralized registration of filters to be used across the project. 
   ///  </summary>
@@ -13,8 +16,11 @@ namespace Ignia.Workbench.DeconstructedWebApi {
   /// </remarks>
   public class FilterConfig {
 
+    /*==========================================================================================================================
+    | METHOD: REGISTER GLOBAL FILTERS
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
-    ///   Registers the global filters.
+    ///   Registers filters that will be used for all incoming Web API requests.
     /// </summary>
     /// <remarks>
     ///   The RegisterGlobalFilters() method is called by the Global.asax with the GlobalFilters.Filters collection as a 

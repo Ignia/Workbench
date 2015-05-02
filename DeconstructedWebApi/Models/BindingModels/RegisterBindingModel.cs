@@ -3,7 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Ignia.Workbench.DeconstructedWebApi.Models {
 
+  /*============================================================================================================================
+  | CLASS: REGISTER (BINDING MODEL)
+  \---------------------------------------------------------------------------------------------------------------------------*/
   public class RegisterBindingModel {
+
     [Required]
     [Display(Name = "Email")]
     public string Email { get; set; }
@@ -18,6 +22,6 @@ namespace Ignia.Workbench.DeconstructedWebApi.Models {
     [Display(Name = "Confirm password")]
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
     public string ConfirmPassword { get; set; }
-  }
 
+  } //Class
 } //Namespace

@@ -8,7 +8,15 @@ using System.Web.Optimization;
 using System.Web.Routing;
 
 namespace Ignia.Workbench.DeconstructedWebApi {
+
+  /*============================================================================================================================
+  | CLASS: WEB API APPLICATION (HTTP APPLICATION)
+  \---------------------------------------------------------------------------------------------------------------------------*/
   public class WebApiApplication : System.Web.HttpApplication {
+
+    /*==========================================================================================================================
+    | EVENT: APPLICATION START
+    \-------------------------------------------------------------------------------------------------------------------------*/
     protected void Application_Start() {
 
       //The following ship out-of-the-box with the Web API template, but are not required for a pure Web API project (i.e., w/out documentation).

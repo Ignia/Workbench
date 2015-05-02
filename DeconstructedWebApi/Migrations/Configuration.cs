@@ -9,17 +9,26 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
   using System.Data.Entity.Validation;
   using System.Text;
 
+  /*============================================================================================================================
+  | CLASS: CONFIGURATION
+  \---------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
   ///   Provides configuration settingsfor Entity Framework migrations, including a method for seeding the database.
   /// </summary>
   internal sealed class Configuration : DbMigrationsConfiguration<Ignia.Workbench.Models.WorkbenchContext> {
 
+    /*==========================================================================================================================
+    | CONSTRUCTOR
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>Initializes a new instance of the <see cref="Configuration"/> class.</summary>
     public Configuration() {
       AutomaticMigrationsEnabled = true;
       ContextKey = "Ignia.Workbench.Models.WorkbenchContext";
     }
 
+    /*==========================================================================================================================
+    | SEED METHOD
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Seeds the database anytime a migration is executed.
     /// </summary>
@@ -93,6 +102,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
 
     }
 
+    /*==========================================================================================================================
+    | CREATE USER METHOD
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Looks up a user and, if they don't exist, creates a user record.
     /// </summary>
@@ -127,6 +139,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
 
     }
 
+    /*==========================================================================================================================
+    | GET USER METHOD
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Gets a reference to the user from the <see cref="UserManager{TUser, TKey}"/>. If the user cannot be found, returns null.
     /// </summary>

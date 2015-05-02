@@ -7,23 +7,47 @@ using System.Text;
 namespace Ignia.Workbench.Models {
   // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
 
+  /*============================================================================================================================
+  | CLASS: WORKBENCH CONTEXT
+  \---------------------------------------------------------------------------------------------------------------------------*/
   public class WorkbenchContext : IdentityDbContext<User> {
 
+    /*==========================================================================================================================
+    | CONSTRUCTOR
+    \-------------------------------------------------------------------------------------------------------------------------*/
     public WorkbenchContext() : base("Workbench", throwIfV1Schema: false) {
     }
 
+    /*==========================================================================================================================
+    | METHOD: CREATE (FACTORY)
+    \-------------------------------------------------------------------------------------------------------------------------*/
     public static WorkbenchContext Create() {
       return new WorkbenchContext();
     }
 
+    /*==========================================================================================================================
+    | PROPERTY: POSTS (ENTITY SET)
+    \-------------------------------------------------------------------------------------------------------------------------*/
     public System.Data.Entity.DbSet<Post> Posts { get; set; }
 
+    /*==========================================================================================================================
+    | PROPERTY: COMMENTS (ENTITY SET)
+    \-------------------------------------------------------------------------------------------------------------------------*/
     public System.Data.Entity.DbSet<Comment> Comments { get; set; }
 
+    /*==========================================================================================================================
+    | EVENT: ON MODEL CREATING (OVERRIDE)
+    \-------------------------------------------------------------------------------------------------------------------------*/
     protected override void OnModelCreating(DbModelBuilder modelBuilder) {
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Execute base method
+      \-----------------------------------------------------------------------------------------------------------------------*/
       base.OnModelCreating(modelBuilder);
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Disable Cascading Delete on 1:n Relationships
+      \-----------------------------------------------------------------------------------------------------------------------*/
       //POST COMMENTS (1:N)
       //###HACK JJC102213: Must disable cascading delete, otherwise a cyclical dependency will occur.
       //###TODO JJC102213: Determine if this prevents posts from being deleted when a user is deleted, or vice versa.
@@ -51,6 +75,9 @@ namespace Ignia.Workbench.Models {
         .HasForeignKey(comment => comment.UserId)
         .WillCascadeOnDelete(false);
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Setup n:n Relationships
+      \-----------------------------------------------------------------------------------------------------------------------*/
       //USER FOLLOWERS (N:N)
       modelBuilder.Entity<User>()
         .HasMany(user => user.Followers)
@@ -93,8 +120,14 @@ namespace Ignia.Workbench.Models {
 
     }
 
+    /*==========================================================================================================================
+    | EVENT: SAVE CHANGES (OVERRIDE)
+    \-------------------------------------------------------------------------------------------------------------------------*/
     public override int SaveChanges() {
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Manually cascade delete
+      \-----------------------------------------------------------------------------------------------------------------------*/
       try {
 
         Comments.Local
@@ -106,6 +139,9 @@ namespace Ignia.Workbench.Models {
 
       }
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Capture Entity Validation Errors 
+      \-----------------------------------------------------------------------------------------------------------------------*/
       catch (DbEntityValidationException ex) {
 
         var sb = new StringBuilder();
@@ -119,7 +155,7 @@ namespace Ignia.Workbench.Models {
         }
 
         throw new DbEntityValidationException(
-          "Entity Validation Failed - errors follow:\n" + sb.ToString(), 
+          "Entity Validation Failed - errors follow:\n" + sb.ToString(),
           ex
         ); // Add the original exception as the innerException
 

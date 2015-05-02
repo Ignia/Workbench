@@ -13,23 +13,35 @@ using Ignia.Workbench.Models;
 
 namespace Ignia.Workbench.DeconstructedWebApi {
 
+  /*============================================================================================================================
+  | CLASS: STARTUP
+  \---------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
   ///   Extends the global <see cref="Startup"/> class by providing methods it can use to configure authorization.
   /// </summary>
   public partial class Startup {
 
+    /*==========================================================================================================================
+    | OAUTH OPTIONS
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Gets the global OAuth options, which are cached for access across the application.
     /// </summary>
     /// <value>The OAuth options.</value>
     public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
 
+    /*==========================================================================================================================
+    | PUBLIC CLIENT ID
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Gets the public client identifier.
     /// </summary>
     /// <value>The public client identifier.</value>
     public static string PublicClientId { get; private set; }
 
+    /*==========================================================================================================================
+    | CONFIGURE AUTHENTICATION
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Extends the global <see cref="Startup"/> class to add authentication support to the OWIN pipeline (via the 
     ///   <see cref="IAppBuilder"/> instance). For more details on configuring authentication, see 
@@ -38,16 +50,24 @@ namespace Ignia.Workbench.DeconstructedWebApi {
     /// <param name="app">The OWIN application pipeline.</param>
     public void ConfigureAuth(IAppBuilder app) {
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Establish OWIN Context
+      \-----------------------------------------------------------------------------------------------------------------------*/
       //Configure the db context and user manager to use a single instance per request
       app.CreatePerOwinContext(WorkbenchContext.Create);
       app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Configue state storage 
+      \-----------------------------------------------------------------------------------------------------------------------*/
       //Enable the application to use a cookie to store information for the signed in user and to use a cookie to temporarily 
       //store information about a user logging in with a third party login provider
       app.UseCookieAuthentication(new CookieAuthenticationOptions());
       app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-      //Configure the application for OAuth based flow
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Configure OAUTH
+      \-----------------------------------------------------------------------------------------------------------------------*/
       PublicClientId = "self";
       OAuthOptions = new OAuthAuthorizationServerOptions {
         TokenEndpointPath = new PathString("/Token"),
@@ -57,9 +77,14 @@ namespace Ignia.Workbench.DeconstructedWebApi {
         AllowInsecureHttp = true
       };
 
-      //Enable the application to use bearer tokens to authenticate users
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Enable bearer tokens
+      \-----------------------------------------------------------------------------------------------------------------------*/
       app.UseOAuthBearerTokens(OAuthOptions);
 
+      /*------------------------------------------------------------------------------------------------------------------------
+      | Configure SSO providers
+      \-----------------------------------------------------------------------------------------------------------------------*/
       // Uncomment the following lines to enable logging in with third party login providers
       //app.UseMicrosoftAccountAuthentication(
       //    clientId: "",

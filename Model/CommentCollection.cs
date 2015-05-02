@@ -17,17 +17,26 @@ using System.Threading.Tasks;
 
 namespace Ignia.Workbench.Models {
 
+  /*============================================================================================================================
+  | CLASS: COMMENT COLLECTION
+  \---------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
   ///   Collection of comments keyed by Id.
   /// </summary>
   /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{Int32,Comment}"/>
   public class CommentCollection : KeyedCollection<int, Comment> {
 
+    /*==========================================================================================================================
+    | CONSTRUCTOR
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Initializes a new instance of the CommentCollection class.
     /// </summary>
     public CommentCollection() { }
 
+    /*==========================================================================================================================
+    | METHOD: GET KEY FOR ITEM
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Gets key for item.  This will provide a means of looking up individual items based on a friendly identifier.  Specifically, this colletion uses the Comment.Id as the lookup.
     /// </summary>
@@ -37,10 +46,6 @@ namespace Ignia.Workbench.Models {
     /// </returns>
     protected override int GetKeyForItem(Comment comment) {
       return comment.Id;
-    }
-
-    public static implicit operator CommentCollection(HashSet<User> v) {
-      throw new NotImplementedException();
     }
 
   } //Class

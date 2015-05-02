@@ -13,13 +13,22 @@ using Ignia.Workbench.Models;
 
 namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
+  /*============================================================================================================================
+  | CLASS: APPLICATION OAUTH PROVIDER
+  \---------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
   ///   
   /// </summary>
   public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider {
 
+    /*==========================================================================================================================
+    | DECLARE VARIABLES
+    \-------------------------------------------------------------------------------------------------------------------------*/
     private readonly string _publicClientId;
 
+    /*==========================================================================================================================
+    | CONSTRUCTOR
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Initializes a new instance of the <see cref="ApplicationOAuthProvider"/> class.
     /// </summary>
@@ -35,6 +44,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
     }
 
+    /*==========================================================================================================================
+    | GRANT RESOURCE OWNER CREDENTIALS METHOD
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Grants the resource owner credentials.
     /// </summary>
@@ -53,7 +65,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
       ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager, OAuthDefaults.AuthenticationType);
       ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(
-        userManager, 
+        userManager,
         CookieAuthenticationDefaults.AuthenticationType
         );
 
@@ -64,6 +76,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
     }
 
+    /*==========================================================================================================================
+    | TOKEN ENDPOINT METHOD
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Tokens the endpoint.
     /// </summary>
@@ -79,6 +94,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
     }
 
+    /*==========================================================================================================================
+    | VALIDATE CLIENT AUTHENTICATION METHOD
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Validates the client authentication.
     /// </summary>
@@ -95,6 +113,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
     }
 
+    /*==========================================================================================================================
+    | VALIDATE CLIENT REDIRECT URI METHOD
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Validates the client redirect URI.
     /// </summary>
@@ -114,6 +135,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
     }
 
+    /*==========================================================================================================================
+    | CREATE PROPERTIES METHOD
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Creates the properties.
     /// </summary>
