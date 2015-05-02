@@ -7,93 +7,180 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using Ignia.Workbench.Models;
 
-namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
-  public class CommentsController : ApiController {
-    private WorkbenchContext db = new WorkbenchContext();
+namespace Ignia.Workbench.DeconstructedWebApi.Controllers
+{
+    /*
+    The WebApiConfig class may require additional changes to add a route for this controller. Merge these statements into the Register method of the WebApiConfig class as applicable. Note that OData URLs are case sensitive.
 
-    // GET: api/Comments
-    public IQueryable<Comment> GetComments() {
-      return db.Comments;
-    }
+    using System.Web.Http.OData.Builder;
+    using System.Web.Http.OData.Extensions;
+    using Ignia.Workbench.Models;
+    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+    builder.EntitySet<Comment>("Comments");
+    builder.EntitySet<User>("Users"); 
+    builder.EntitySet<Post>("Posts"); 
+    config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
+    */
+    public class CommentsController : ODataController
+    {
+        private WorkbenchContext db = new WorkbenchContext();
 
-    // GET: api/Comments/5
-    [ResponseType(typeof(Comment))]
-    public IHttpActionResult GetComment(int id) {
-      Comment comment = db.Comments.Find(id);
-      if (comment == null) {
-        return NotFound();
-      }
-
-      return Ok(comment);
-    }
-
-    // PUT: api/Comments/5
-    [ResponseType(typeof(void))]
-    public IHttpActionResult PutComment(int id, Comment comment) {
-      if (!ModelState.IsValid) {
-        return BadRequest(ModelState);
-      }
-
-      if (id != comment.Id) {
-        return BadRequest();
-      }
-
-      db.Entry(comment).State = EntityState.Modified;
-
-      try {
-        db.SaveChanges();
-      }
-      catch (DbUpdateConcurrencyException) {
-        if (!CommentExists(id)) {
-          return NotFound();
+        // GET: odata/Comments
+        [EnableQuery]
+        public IQueryable<Comment> GetComments()
+        {
+            return db.Comments;
         }
-        else {
-          throw;
+
+        // GET: odata/Comments(5)
+        [EnableQuery]
+        public SingleResult<Comment> GetComment([FromODataUri] int key)
+        {
+            return SingleResult.Create(db.Comments.Where(comment => comment.Id == key));
         }
-      }
 
-      return StatusCode(HttpStatusCode.NoContent);
+        // PUT: odata/Comments(5)
+        public IHttpActionResult Put([FromODataUri] int key, Delta<Comment> patch)
+        {
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Comment comment = db.Comments.Find(key);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            patch.Put(comment);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CommentExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(comment);
+        }
+
+        // POST: odata/Comments
+        public IHttpActionResult Post(Comment comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            db.Comments.Add(comment);
+            db.SaveChanges();
+
+            return Created(comment);
+        }
+
+        // PATCH: odata/Comments(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public IHttpActionResult Patch([FromODataUri] int key, Delta<Comment> patch)
+        {
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Comment comment = db.Comments.Find(key);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(comment);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CommentExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(comment);
+        }
+
+        // DELETE: odata/Comments(5)
+        public IHttpActionResult Delete([FromODataUri] int key)
+        {
+            Comment comment = db.Comments.Find(key);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            db.Comments.Remove(comment);
+            db.SaveChanges();
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        // GET: odata/Comments(5)/Likes
+        [EnableQuery]
+        public IQueryable<User> GetLikes([FromODataUri] int key)
+        {
+            return db.Comments.Where(m => m.Id == key).SelectMany(m => m.Likes);
+        }
+
+        // GET: odata/Comments(5)/Post
+        [EnableQuery]
+        public SingleResult<Post> GetPost([FromODataUri] int key)
+        {
+            return SingleResult.Create(db.Comments.Where(m => m.Id == key).Select(m => m.Post));
+        }
+
+        // GET: odata/Comments(5)/User
+        [EnableQuery]
+        public SingleResult<User> GetUser([FromODataUri] int key)
+        {
+            return SingleResult.Create(db.Comments.Where(m => m.Id == key).Select(m => m.User));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private bool CommentExists(int key)
+        {
+            return db.Comments.Count(e => e.Id == key) > 0;
+        }
     }
-
-    // POST: api/Comments
-    [ResponseType(typeof(Comment))]
-    public IHttpActionResult PostComment(Comment comment) {
-      if (!ModelState.IsValid) {
-        return BadRequest(ModelState);
-      }
-
-      db.Comments.Add(comment);
-      db.SaveChanges();
-
-      return CreatedAtRoute("DefaultApi", new { id = comment.Id }, comment);
-    }
-
-    // DELETE: api/Comments/5
-    [ResponseType(typeof(Comment))]
-    public IHttpActionResult DeleteComment(int id) {
-      Comment comment = db.Comments.Find(id);
-      if (comment == null) {
-        return NotFound();
-      }
-
-      db.Comments.Remove(comment);
-      db.SaveChanges();
-
-      return Ok(comment);
-    }
-
-    protected override void Dispose(bool disposing) {
-      if (disposing) {
-        db.Dispose();
-      }
-      base.Dispose(disposing);
-    }
-
-    private bool CommentExists(int id) {
-      return db.Comments.Count(e => e.Id == id) > 0;
-    }
-  }
 }
