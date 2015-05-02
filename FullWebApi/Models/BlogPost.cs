@@ -21,7 +21,7 @@ namespace FullWebApi.Models {
     [Required]
     public ApplicationUser User { get; set; }
 
-    public virtual ICollection<Comment> Comments { get; set; }
+    public ICollection<Comment> Comments { get; set; }
 
   }
 }
