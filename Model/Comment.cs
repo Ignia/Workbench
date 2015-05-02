@@ -65,6 +65,7 @@ namespace Ignia.Workbench.Models {
     ///   The date created.
     /// </value>
     [Required]
+    [Display(Name = "Date Created")]
     public DateTime DateCreated { get; set; }
 
     /*==========================================================================================================================

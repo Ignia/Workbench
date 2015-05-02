@@ -109,6 +109,7 @@ namespace Ignia.Workbench.Models {
     /// </value>
     [DataMember]
     [InverseProperty("TaggedUsers")]
+    [Display(Name = "Tagged In Posts")]
     public virtual PostCollection TaggedInPosts { get; set; }
 
     /*==========================================================================================================================
@@ -148,6 +149,7 @@ namespace Ignia.Workbench.Models {
     /// </value>
     [DataMember]
     [InverseProperty("Likes")]
+    [Display(Name = "Liked Comments")]
     public virtual CommentCollection LikedComments { get; set; }
 
     /*==========================================================================================================================
@@ -161,6 +163,7 @@ namespace Ignia.Workbench.Models {
     /// </value>
     [DataMember]
     [InverseProperty("Likes")]
+    [Display(Name = "Liked Posts")]
     public virtual PostCollection LikedPosts { get; set; }
 
     /*==========================================================================================================================
@@ -174,6 +177,7 @@ namespace Ignia.Workbench.Models {
     /// </value>
     [DataMember]
     [Required]
+    [Display(Name = "Date Created")]
     public DateTime DateCreated { get; set; }
 
     /*==========================================================================================================================
@@ -192,6 +196,9 @@ namespace Ignia.Workbench.Models {
     [Timestamp]
     public Byte[] TimeStamp { get; set; }
 
+    /*==========================================================================================================================
+    | METHOD: GENERATE USER IDENTITY ASYNCHRONOUSLY (FACTORY)
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Factory method for asynchronously creating a new user identity based on the current user. 
     /// </summary>
@@ -199,10 +206,10 @@ namespace Ignia.Workbench.Models {
     /// <param name="authenticationType">Authentication method to use.</param>
     /// <returns></returns>
     public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager, string authenticationType) {
-  
+
       // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
       var userIdentity = await manager.CreateIdentityAsync(this, authenticationType);
-      
+
       // Add custom user claims here
       return userIdentity;
 

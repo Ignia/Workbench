@@ -111,6 +111,7 @@ namespace Ignia.Workbench.Models {
     ///   The date created.
     /// </value>
     [Required]
+    [Display(Name = "Date Created")]
     public DateTime DateCreated { get; set; }
 
     /*==========================================================================================================================
@@ -147,6 +148,7 @@ namespace Ignia.Workbench.Models {
     ///   The users tagged in this post.
     /// </value>
     [InverseProperty("TaggedInPosts")]
+    [Display(Name = "Tagged Users")]
     public virtual UserCollection TaggedUsers { get; set; }
 
     /*==========================================================================================================================
