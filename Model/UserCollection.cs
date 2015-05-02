@@ -17,17 +17,26 @@ using System.Threading.Tasks;
 
 namespace Ignia.Workbench.Models {
 
+  /*============================================================================================================================
+  | CLASS: USER COLLECTION
+  \---------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
   ///   Collection of users keyed by Id.
   /// </summary>
   /// <seealso cref="T:System.Collections.ObjectModel.KeyedCollection{String,User}"/>
   public class UserCollection : KeyedCollection<String, User> {
 
+    /*==========================================================================================================================
+    | CONSTRUCTOR
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Initializes a new instance of the UserCollection class.
     /// </summary>
     public UserCollection() { }
 
+    /*==========================================================================================================================
+    | METHOD: GET KEY FOR ITEM
+    \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
     ///   Gets key for item.  This will provide a means of looking up individual items based on a friendly identifier.  Specifically, this colletion uses the User.Id as the lookup.
     /// </summary>
