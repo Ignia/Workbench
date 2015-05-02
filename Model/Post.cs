@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace Ignia.Workbench.Models {
 
@@ -111,7 +112,7 @@ namespace Ignia.Workbench.Models {
     /// </value>
     [InverseProperty("TaggedInPosts")]
     public virtual UserCollection TaggedUsers { get; set; }
-    
+
     /// <summary>
     ///   Gets or sets the time stamp, which is a byte array representing the time when the object was last updated.  ADO.NET
     ///   Entity Framework uses the time stamp field to provide concurrency checking during updates.  In typical use, this is not
@@ -121,6 +122,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The time stamp.
     /// </value>
+    [IgnoreDataMember]
     [Timestamp]
     public Byte[] TimeStamp { get; set; }
 

@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System;
+using System.Runtime.Serialization;
 
 namespace Ignia.Workbench.Models {
   // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
@@ -14,6 +15,7 @@ namespace Ignia.Workbench.Models {
   ///   The User class represents the user who authored an object (such as a Post or a Comment) or that is currently
   ///   authenticated.
   /// </summary>
+  [DataContract] 
   public class User : IdentityUser {
 
     /// <summary>
@@ -33,6 +35,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The identifier.
     /// </value>
+    [DataMember]
     [Column("UserId")]
     public override string Id {
       get {
@@ -44,11 +47,27 @@ namespace Ignia.Workbench.Models {
     }
 
     /// <summary>
+    ///   Gets or sets the username, which is a unique key identifying the user.
+    /// </summary>
+    /// <value>The username.</value>
+    [DataMember]
+    public override string UserName {
+      get {
+        return base.UserName;
+      }
+
+      set {
+        base.UserName = value;
+      }
+    }
+
+    /// <summary>
     ///   Gets or sets a collection of comments that the user has made.
     /// </summary>
     /// <value>
     ///   The comments the user has submitted.
     /// </value>
+    [DataMember]
     [InverseProperty("User")]
     public virtual CommentCollection Comments { get; set; }
 
@@ -58,6 +77,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The posts the user has submitted.
     /// </value>
+    [DataMember]
     [InverseProperty("User")]
     public virtual PostCollection Posts { get; set; }
 
@@ -67,6 +87,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   Posts the user is tagged in.
     /// </value>
+    [DataMember]
     [InverseProperty("TaggedUsers")]
     public virtual PostCollection TaggedInPosts { get; set; }
 
@@ -76,6 +97,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users that the user is following.
     /// </value>
+    [DataMember]
     [InverseProperty("Following")]
     public virtual UserCollection Followers { get; set; }
 
@@ -85,6 +107,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The users that are following the user.
     /// </value>
+    [DataMember]
     [InverseProperty("Followers")]
     public virtual UserCollection Following { get; set; }
 
@@ -94,6 +117,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The comments that the user has liked.
     /// </value>
+    [DataMember]
     [InverseProperty("Likes")]
     public virtual CommentCollection LikedComments { get; set; }
 
@@ -103,6 +127,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The posts that the user has liked.
     /// </value>
+    [DataMember]
     [InverseProperty("Likes")]
     public virtual PostCollection LikedPosts { get; set; }
 
@@ -112,6 +137,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The date the user was created.
     /// </value>
+    [DataMember]
     [Required]
     public DateTime DateCreated { get; set; }
 
@@ -124,6 +150,7 @@ namespace Ignia.Workbench.Models {
     /// <value>
     ///   The time stamp.
     /// </value>
+    [IgnoreDataMember]
     [Timestamp]
     public Byte[] TimeStamp { get; set; }
 
