@@ -28,7 +28,7 @@ namespace Ignia.Workbench.DeconstructedWebApi {
       GlobalConfiguration.Configure(WebApiConfig.Register);
 
       //Add optional global filters to the GlobalFilters repository
-      FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+      //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 
     }
   }
