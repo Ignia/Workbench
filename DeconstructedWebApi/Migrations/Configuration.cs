@@ -1,12 +1,13 @@
-namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
-  using System;
-  using System.Data.Entity;
-  using System.Data.Entity.Migrations;
-  using System.Linq;
+namespace Ignia.Workbench.Client.Migrations {
+
   using Ignia.Workbench.Models;
   using Microsoft.AspNet.Identity;
   using Microsoft.AspNet.Identity.EntityFramework;
+  using System;
+  using System.Data.Entity;
+  using System.Data.Entity.Migrations;
   using System.Data.Entity.Validation;
+  using System.Linq;
   using System.Text;
 
   /*============================================================================================================================
@@ -20,7 +21,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
     /*==========================================================================================================================
     | CONSTRUCTOR
     \-------------------------------------------------------------------------------------------------------------------------*/
-    /// <summary>Initializes a new instance of the <see cref="Configuration"/> class.</summary>
+    /// <summary>
+    ///   Initializes a new instance of the <see cref="Configuration" /> class.
+    /// </summary>
     public Configuration() {
       AutomaticMigrationsEnabled = true;
       ContextKey = "Ignia.Workbench.Models.WorkbenchContext";
@@ -38,10 +41,10 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
       /*------------------------------------------------------------------------------------------------------------------------
       | Create Users
       \-----------------------------------------------------------------------------------------------------------------------*/
-      var manager    = new UserManager<User>(new UserStore<User>(context));
+      var manager = new UserManager<User>(new UserStore<User>(context));
 
-      var jeremy     = CreateUser(manager, "Jeremy",    "Jeremy@Ignia.com",    "15Password#");
-      var katherine  = CreateUser(manager, "Katherine", "Katherine@Ignia.com", "15Password#");
+      var jeremy = CreateUser(manager, "Jeremy", "Jeremy@Ignia.com", "15Password#");
+      var katherine = CreateUser(manager, "Katherine", "Katherine@Ignia.com", "15Password#");
 
       /*------------------------------------------------------------------------------------------------------------------------
       | Add followers (friends)
@@ -143,7 +146,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
     | GET USER METHOD
     \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
-    ///   Gets a reference to the user from the <see cref="UserManager{TUser, TKey}"/>. If the user cannot be found, returns null.
+    ///   Gets a reference to the user from the <see cref="UserManager{TUser, TKey}" />. If the user cannot be found, returns null.
     /// </summary>
     /// <param name="manager">The user manager to use to create the user.</param>
     /// <param name="username">The username; will be used as the key to determine if the user exists.</param>
