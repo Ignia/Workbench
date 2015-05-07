@@ -19,11 +19,12 @@
       var deferred = $q.defer();
       $http.get('/odata/Posts/?$expand=Comments')
         .success(function(data, status, headers, config) {
-          deferred.resolve(data);
+          deferred.resolve(data.value);
         })
         .error(function(data, status, headers, config) {
           deferred.reject("An error occurred loading the data.");
         });
+	    return deferred.promise;
     }
 
   }
