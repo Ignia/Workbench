@@ -1,24 +1,24 @@
 ﻿(function() {
-	'use strict';
+  'use strict';
 
-	angular
-		.module('app')
-		.controller('HomeController', HomeController);
+  angular
+    .module('app')
+    .controller('HomeController', HomeController);
 
-	HomeController.$inject = ['$location', 'workbench'];
+  HomeController.$inject = ['$location', 'workbench'];
 
-	function HomeController($location, workbench) {
-		/* jshint validthis:true */
-		var vm = this;
-		
+  function HomeController($location, workbench) {
+    /* jshint validthis:true */
+    var vm = this;
+    
     vm.title   = 'Home Controller';
-		vm.someValue = workbench.someValue();
-		vm.posts   = workbench.getData();
+    vm.someValue = workbench.someValue();
+    vm.posts   = workbench.getData();
 
-		activate();
+    activate();
 
-		function activate() {			
+    function activate() {      
 
-		}
-	}
+    }
+  }
 })();
