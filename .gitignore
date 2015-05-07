@@ -5,3 +5,4 @@
 *.sln.ide/*.*
 *.mdf
 *.ldf
+/*/Scripts/**/*
