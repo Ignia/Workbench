@@ -2,26 +2,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Workbench: Angular Client</title>
+</head>
+<body ng-app="app" ng-controller="HomeController as vm">
+
+  <br />{{vm.title}}
+
+  <div ng-repeat="post in vm.posts">
+    <h3>{{post.Title}}</h3>
+    {{post.Body}}
+    <div>
+      <em>Comments</em>
+      <ul>
+        <li ng-repeat="comment in post.Comments">
+          {{comment.Body}}
+        </li>
+      </ul>
+    </div>
+  </div>
+
   <script src="/Scripts/angular.js"></script>
   <script src="/Scripts/angular-route.js"></script>
   <script src="/Angular/app.js"></script>
   <script src="/Angular/Services/Workbench.js"></script>
   <script src="/Angular/Index.html.js"></script>
-</head>
-<body ng-app="app" ng-controller="HomeController as vm">
-
-  <br />vm.Title: {{vm.title}}
-
-  <br />vm.someValue: {{vm.someValue}}
-
-  <ul>
-    <li ng-repeat="post in vm.posts">
-      Title: <strong>{{post.Title}}</strong>
-      {{post.Body}}
-    </li>
-  </ul>
-
-  <br />Posts: {{vm.posts}}
 
 </body>
 </html>
