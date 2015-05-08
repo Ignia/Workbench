@@ -1,31 +1,36 @@
 ﻿(function() {
-  'use strict';
+	'use strict';
 
-  angular
-    .module('app')
-    .factory('workbench', workbench);
+	angular
+		.module('app')
+		.provider('workbench', workbenchProvider)
+		.config(function(workbenchProvider) {});
 
-  workbench.$inject = ['$http', '$q'];
+	function workbenchProvider() {
 
-  function workbench($http, $q) {
-    var service = {
-      getData: getData,
-      someValue: function() { return 'a different value' }
-    };
+		this.$get = [
+			'$http',
+			'$q',
+			workbenchFactory
+  	];
 
-    return service;
+  };
 
-    function getData() {
-      var deferred = $q.defer();
-      $http.get('/odata/Posts/?$expand=Comments')
-        .success(function(data, status, headers, config) {
-          deferred.resolve(data.value);
-        })
-        .error(function(data, status, headers, config) {
-          deferred.reject("An error occurred loading the data.");
-        });
-	    return deferred.promise;
-    }
+	function workbenchFactory($http, $q) {
+		return {
+			someValue: function() { return 'a different value' },
+			getData: function() {
+				var deferred = $q.defer();
+				$http.get('/odata/Posts?$expand=Comments')
+					.success(function(data, status, headers, config) {
+						deferred.resolve(data.value);
+					})
+					.error(function(data, status, headers, config) {
+						deferred.reject("An error occurred loading the data.");
+					});
+				return deferred.promise;
+			}
+		}
+	}
 
-  }
 })();

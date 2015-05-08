@@ -5,15 +5,18 @@
     .module('app')
     .controller('HomeController', HomeController);
 
-  HomeController.$inject = ['$location', 'workbench'];
+  HomeController.$inject = ['$location', 'workbench', '$q'];
 
-  function HomeController($location, workbench) {
+  function HomeController($location, workbench, $q) {
     /* jshint validthis:true */
     var vm = this;
     
     vm.title   = 'Home Controller';
     vm.someValue = workbench.someValue();
-    vm.posts   = workbench.getData();
+
+    workbench.getData().then(function(data) {
+      vm.posts = data;
+    });
 
     activate();
 
