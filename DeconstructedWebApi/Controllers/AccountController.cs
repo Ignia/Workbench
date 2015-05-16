@@ -1,4 +1,14 @@
-﻿using System;
+﻿using Ignia.Workbench.DeconstructedWebApi.Models;
+using Ignia.Workbench.DeconstructedWebApi.Providers;
+using Ignia.Workbench.DeconstructedWebApi.Results;
+using Ignia.Workbench.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Claims;
@@ -7,22 +17,15 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
-using Ignia.Workbench.Models;
-using Ignia.Workbench.DeconstructedWebApi.Models;
-using Ignia.Workbench.DeconstructedWebApi.Providers;
-using Ignia.Workbench.DeconstructedWebApi.Results;
 
 namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
 
   /// <summary>
-  ///   The <see cref="AccountController"/> provides support for all account functions, including registration, authentication, 
-  ///   and retrieving user information. It is responsible for all requests to the <code>/api/Account</code> endpoint.
+  ///   The <see cref="AccountController" /> provides support for all account functions, including registration, authentication,
+  ///   and retrieving user information. It is responsible for all requests to the
+  ///   <code>
+  ///     /api/Account
+  ///   </code>endpoint.
   /// </summary>
   [Authorize]
   [RoutePrefix("api/Account")]
@@ -32,13 +35,13 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     private ApplicationUserManager _userManager;
 
     /// <summary>
-    ///   Initializes a new instance of the <see cref="AccountController"/> class.
+    ///   Initializes a new instance of the <see cref="AccountController" /> class.
     /// </summary>
     public AccountController() {
     }
 
     /// <summary>
-    ///   Initializes a new instance of the <see cref="AccountController"/> class.
+    ///   Initializes a new instance of the <see cref="AccountController" /> class.
     /// </summary>
     /// <param name="userManager">The user manager.</param>
     /// <param name="accessTokenFormat">The access token format.</param>
@@ -48,7 +51,8 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     }
 
     /// <summary>
-    ///   Gets or sets a reference to the user manager configured for this controller; if no user manager is configured, then it retrieves one from the current request's OWIN context.
+    ///   Gets or sets a reference to the user manager configured for this controller; if no user manager is configured, then it
+    ///   retrieves one from the current request's OWIN context.
     /// </summary>
     /// <value>The user manager.</value>
     public ApplicationUserManager UserManager {
@@ -67,7 +71,13 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
     /// <summary>
-    ///   Gets information about the currently authenticated user via <code>GET</code> requests to the <code>/api/Account/UserInfo</code> endpoint.
+    ///   Gets information about the currently authenticated user via
+    ///   <code>
+    ///     GET
+    ///   </code>requests to the
+    ///   <code>
+    ///     /api/Account/UserInfo
+    ///   </code>endpoint.
     /// </summary>
     /// <returns>Information about the currently authenticated user</returns>
     [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -83,7 +93,13 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     }
 
     /// <summary>
-    ///   Logs out the currently authenticated user via <code>POST</code> requests to the <code>/api/Account/Logout</code> endpoint.
+    ///   Logs out the currently authenticated user via
+    ///   <code>
+    ///     POST
+    ///   </code>requests to the
+    ///   <code>
+    ///     /api/Account/Logout
+    ///   </code>endpoint.
     /// </summary>
     /// <returns></returns>
     [Route("Logout")]
@@ -132,7 +148,8 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     }
 
     /// <summary>
-    ///   Changes the password for the currently authenticated user via a <c>POST</c> request to the <c>/api/Account/ChangePassword</c> endpoint.
+    ///   Changes the password for the currently authenticated user via a <c>POST</c> request to the
+    ///   <c>/api/Account/ChangePassword</c> endpoint.
     /// </summary>
     /// <param name="model">The binding model including the parameters for changing a password.</param>
     /// <returns></returns>
@@ -147,7 +164,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
       //Make an asyncronous request to change the password via the UserManager
       IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
 
-      //Handle errors 
+      //Handle errors
       if (!result.Succeeded) {
         return GetErrorResult(result);
       }
@@ -183,7 +200,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
 
     // POST api/Account/AddExternalLogin
     /// <summary>
-    ///   Adds the external login.
+    ///   Associates an external login (e.g., Facebook) with an existing account.
     /// </summary>
     /// <param name="model">The model.</param>
     /// <returns></returns>
@@ -199,8 +216,8 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
       AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
 
       if (
-        ticket == null || 
-        ticket.Identity == null || 
+        ticket == null ||
+        ticket.Identity == null ||
         (
           ticket.Properties != null
           && ticket.Properties.ExpiresUtc.HasValue
@@ -342,7 +359,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
         ExternalLoginViewModel login = new ExternalLoginViewModel {
           Name = description.Caption,
           Url = Url.Route(
-            "ExternalLogin", 
+            "ExternalLogin",
             new {
               provider = description.AuthenticationType,
               response_type = "token",
@@ -423,7 +440,9 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     /// <summary>
     ///   Releases unmanaged and - optionally - managed resources.
     /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing">
+    ///   <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+    /// </param>
     protected override void Dispose(bool disposing) {
 
       if (disposing && _userManager != null) {
@@ -445,7 +464,8 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     }
 
     /// <summary>
-    ///   Gets the error result.</summary>
+    ///   Gets the error result.
+    /// </summary>
     /// <param name="result">The result.</param>
     /// <returns></returns>
     private IHttpActionResult GetErrorResult(IdentityResult result) {
@@ -472,11 +492,12 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     }
 
     /// <summary>
-    ///   
-    /// </summary>
+    ///   </summary>
     private class ExternalLoginData {
       public string LoginProvider { get; set; }
+
       public string ProviderKey { get; set; }
+
       public string UserName { get; set; }
 
       public IList<Claim> GetClaims() {
@@ -520,8 +541,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     }
 
     /// <summary>
-    /// 
-    /// </summary>
+    ///   </summary>
     private static class RandomOAuthStateGenerator {
 
       private static RandomNumberGenerator _random = new RNGCryptoServiceProvider();
@@ -541,6 +561,6 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
       }
     }
 
-    #endregion
+    #endregion Helpers
   }
 }
