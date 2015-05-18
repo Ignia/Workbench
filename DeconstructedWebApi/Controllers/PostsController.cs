@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ignia.Workbench.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -10,7 +11,6 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
-using Ignia.Workbench.Models;
 
 namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
   /*
@@ -21,10 +21,12 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
   using Ignia.Workbench.Models;
   ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
   builder.EntitySet<Post>("Posts");
-  builder.EntitySet<Comment>("Comments"); 
-  builder.EntitySet<User>("Users"); 
+  builder.EntitySet<Comment>("Comments");
+  builder.EntitySet<User>("Users");
   config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
   */
+
+  [Authorize]
   public class PostsController : ODataController {
     private WorkbenchContext db = new WorkbenchContext();
 

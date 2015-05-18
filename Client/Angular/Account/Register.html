@@ -1,0 +1,9 @@
+﻿<h2>{{vm.title}}</h2>
+{{vm.status}}
+
+<form novalidate>
+  <br />E-mail: <input type="email" ng-model="vm.user.Email" />
+  <br />Password: <input type="password" ng-model="vm.user.Password" />
+  <br />Confirm Password: <input type="password" ng-model="vm.user.ConfirmPassword" />
+  <input type="submit" ng-click="vm.register(vm.user)" value="Save" />
+</form>

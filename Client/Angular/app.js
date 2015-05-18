@@ -1,13 +1,21 @@
 ﻿(function() {
   'use strict';
 
-  angular.module('app', [
-    // Angular modules 
-    'ngRoute'
+  angular
 
-    // Custom modules 
+    .module('app', [
+      // Angular modules 
+      'ngRoute',
 
-    // 3rd Party Modules
+      // Custom modules 
 
-  ]);
+      // 3rd Party Modules
+      'LocalStorageModule'
+
+    ])
+
+    .config(function (localStorageServiceProvider) {
+      localStorageServiceProvider.setPrefix('workbench');
+    });
+
 })();
