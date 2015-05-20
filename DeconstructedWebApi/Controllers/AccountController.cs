@@ -24,8 +24,8 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
   ///   The <see cref="AccountController" /> provides support for all account functions, including registration, authentication,
   ///   and retrieving user information. It is responsible for all requests to the
   ///   <code>
-  ///     /api/Account
-  ///   </code>endpoint.
+  ///                             /api/Account
+  ///     </code>endpoint.
   /// </summary>
   [Authorize]
   [RoutePrefix("api/Account")]
@@ -71,13 +71,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
     /// <summary>
-    ///   Gets information about the currently authenticated user via
-    ///   <code>
-    ///     GET
-    ///   </code>requests to the
-    ///   <code>
-    ///     /api/Account/UserInfo
-    ///   </code>endpoint.
+    ///   Gets information about the currently authenticated user via <c>GET</c> requests to the <c>/api/Account/UserInfo</c> endpoint.
     /// </summary>
     /// <returns>Information about the currently authenticated user</returns>
     [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -85,21 +79,17 @@ namespace Ignia.Workbench.DeconstructedWebApi.Controllers {
     public UserInfoViewModel GetUserInfo() {
       ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
+      //### NOTE 05192015: Modified view model to attempt to include an email claim first, instead of username.
       return new UserInfoViewModel {
-        Email = User.Identity.GetUserName(),
+        //Email = User.Identity.GetUserName(),
+        Email = ((ClaimsIdentity)User.Identity).FindFirstValue(ClaimTypes.Email) ?? User.Identity.GetUserName(),
         HasRegistered = externalLogin == null,
         LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
       };
     }
 
     /// <summary>
-    ///   Logs out the currently authenticated user via
-    ///   <code>
-    ///     POST
-    ///   </code>requests to the
-    ///   <code>
-    ///     /api/Account/Logout
-    ///   </code>endpoint.
+    ///   Logs out the currently authenticated user via <c>POST</c> requests to the <c>/api/Account/Logout</c> endpoint.
     /// </summary>
     /// <returns></returns>
     [Route("Logout")]
