@@ -15,6 +15,7 @@
 	  vm.status  = 'Please enter your login credentials';
     vm.login   = login;
 	  vm.providers = [];
+	  vm.errors = [];
 
     activate();
 
@@ -26,10 +27,12 @@
     function loginExternal() {
 	    workbench.loginExternal()
         .then(function(response) {
+			    vm.status = "Successfully authenticated";
 			    console.log(response);
 		    })
         .catch(function(response) {
-			    console.log(response);
+			    vm.status = "The following errors were identified with your input:";
+			    vm.errors = response;
 		    });
     }
 

@@ -1,6 +1,10 @@
 ﻿<h2>{{vm.title}}</h2>
 {{vm.status}}
 
+<ul ng-show="vm.errors.length > 0">
+  <li ng-repeat="error in vm.errors">{{error}}</li>
+</ul>
+
 <form novalidate>
   <br />E-mail: <input type="email" ng-model="vm.user.Email" />
   <br />Password: <input type="password" ng-model="vm.user.Password" />

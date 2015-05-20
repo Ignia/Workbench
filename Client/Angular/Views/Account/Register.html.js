@@ -13,6 +13,7 @@
     
     vm.title   = 'Register Controller';
 	  vm.status  = 'Please complete the following fields to register.';
+    vm.errors  = [];
 
 	  vm.register = register;
 
@@ -29,7 +30,8 @@
           $location.path('/');
         })
         .catch(function(error) {
-		      vm.status = "An error occurred: " + error;
+			    vm.status = "The following errors were identified with your input:";
+			    vm.errors = response;
 	      });
     }
     

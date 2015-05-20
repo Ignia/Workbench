@@ -92,7 +92,7 @@
 				})
 				.error(function(data, status, headers, config) {
 					if (data.ModelState) {
-						deferred.reject(data.ModelState[''][0]);
+						deferred.reject(parseErrors(data));
 					}
 					else {
 						deferred.reject(data.Message);
@@ -124,7 +124,9 @@
 
 	    var hashObject = $.parseJSON('{"' + decodeURI(hash).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
 	    var accessToken = hashObject.access_token;
-
+      
+      localStorageService.set('token', accessToken);
+  
 			$http.get(
         '/api/Account/UserInfo',
 				{
@@ -134,12 +136,12 @@
 				}
       )
 				.success(function(data, status, headers, config) {
-					deferred.resolve(data);
+					return data;
 				})
 				.error(function(data, status, headers, config) {
 					deferred.reject(data);
-				});
-	    deferred.promise.then(function(data) {
+				})
+	    .then(function(data) {
 		    if (!data.HasRegistered) {
 			    $http.post(
             '/api/Account/RegisterExternal',
@@ -153,19 +155,32 @@
 				    }
           )
 				    .success(function(data, status, headers, config) {
-					    console.log(data);
+					    console.log("RegisterExternal Success");
+              console.log(data);
 					    deferred.resolve(data);
 				    })
 				    .error(function(data, status, headers, config) {
-					    console.log(data);
-					    deferred.reject(data);
+					    if (data.ModelState) {
+						    deferred.reject(parseErrors(data));
+					    }
+					    else {
+						    deferred.reject(data.Message);
+					    }
 				    });
 		    }
 	    });
 			return deferred.promise;
-
     }
 
+    function parseErrors(response) {
+      var errors = [];
+      for (var key in response.ModelState) {
+        for (var i = 0; i < response.ModelState[key].length; i++) {
+          errors.push(response.ModelState[key][i]);
+        }
+      }
+      return errors;
+    }
 
 	}
 
