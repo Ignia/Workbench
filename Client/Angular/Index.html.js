@@ -23,7 +23,7 @@
 
 	  function logout() {
 		  workbench.logout();
-		  $location.path('/Account/Login');
+		  $location.url('/Account/Login');
 	  }
 
   }
