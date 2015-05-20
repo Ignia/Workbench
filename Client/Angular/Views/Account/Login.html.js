@@ -25,10 +25,13 @@
     }
 
     function loginExternal() {
+	    console.log('Entering loginExternal (controller)...');
 	    workbench.loginExternal()
         .then(function(response) {
-			    vm.status = "Successfully authenticated";
-			    console.log(response);
+          if (response) {
+			      vm.status = 'Successfully logged in';
+            $location.path('/Posts');
+          }
 		    })
         .catch(function(response) {
 			    vm.status = "The following errors were identified with your input:";
@@ -50,7 +53,7 @@
 	    workbench.login(user)
 		    .then(function(response) {
 			    vm.status = 'Successfully logged in as ' + response.userName;
-          $location.path('/');
+          $location.path('/Posts');
 		    })
 		    .catch(function(error) {
 			    vm.status = 'An error occurred: ' + error;
