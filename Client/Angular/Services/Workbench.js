@@ -12,6 +12,8 @@
 
 	function workbenchFactory($http, $q, $cookies, $location, localStorageService) {
 
+		var loginProviders;
+
 		return {
 			someValue: function() { return 'a different value' },
 			getToken: getToken,
@@ -53,8 +55,8 @@
 		}
 
 		function logout() {
+			console.log('Login token removed');
 		  localStorageService.remove('token');
-		//$cookies.remove('.AspNet.Cookies');
 		}
 
 		function login(user) {
@@ -103,8 +105,13 @@
 
     function getLoginProviders() {
 			var deferred = $q.defer();
+	    if (loginProviders) {
+		    deferred.resolve(loginProviders);
+		    return deferred.promise;
+	    }
 			$http.get('/API/Account/ExternalLogins?returnUrl=%2FAngular%2FAccount%2FLogin&generateState=true')
 				.success(function(data, status, headers, config) {
+          loginProviders = data;
 					deferred.resolve(data);
 				})
 				.error(function(data, status, headers, config) {
@@ -113,63 +120,78 @@
 			return deferred.promise;
     }
 
+    function getLoginProviderUrl(name) {
+	    return getLoginProviders().then(function(data) {
+		    var output = null;
+		    data.some(function(provider, index, array) {
+			    if (provider.Name === name) {
+				    output = provider.Url;
+				    return true;
+			    }
+		    });
+		    return output;
+	    });
+    }
+
     function loginExternal() {
 			var deferred = $q.defer();
 	    var hash = $location.hash();
 
+	    console.log('Entering loginExternal');
 	    if (!hash) {
   			deferred.resolve(false);
         return deferred.promise;
 	    }
+	    console.log(hash);
 
 	    var hashObject = $.parseJSON('{"' + decodeURI(hash).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
 	    var accessToken = hashObject.access_token;
       
-      localStorageService.set('token', accessToken);
-  
-			$http.get(
-        '/api/Account/UserInfo',
-				{
-				  headers: {
-					  authorization: 'bearer ' + accessToken
-				  }		
-				}
-      )
-				.success(function(data, status, headers, config) {
-					return data;
-				})
-				.error(function(data, status, headers, config) {
-					deferred.reject(data);
-				})
-	    .then(function(data) {
-		    if (!data.HasRegistered) {
-			    $http.post(
-            '/api/Account/RegisterExternal',
-					  {
-						  Email: data.Email
-					  },
-				    {
-				      headers: {
-					      authorization: 'bearer ' + accessToken
-				      }		
+	    $http.get(
+			    '/api/Account/UserInfo',
+			    {
+				    headers: {
+					    authorization: 'bearer ' + accessToken
 				    }
-          )
-				    .success(function(data, status, headers, config) {
-					    console.log("RegisterExternal Success");
-              console.log(data);
-					    deferred.resolve(data);
-				    })
-				    .error(function(data, status, headers, config) {
-					    if (data.ModelState) {
-						    deferred.reject(parseErrors(data));
-					    }
-					    else {
-						    deferred.reject(data.Message);
-					    }
-				    });
-		    }
-	    });
-			return deferred.promise;
+			    }
+		    )
+		    .success(function(userInfo, status, headers, config) {
+			    if (userInfo.HasRegistered) {
+       			deferred.resolve(true);
+				    localStorageService.set('token', accessToken);
+			    }
+			    else {
+				    $http.post(
+						    '/api/Account/RegisterExternal',
+						    {
+							    Email: userInfo.Email
+						    },
+						    {
+							    headers: {
+								    authorization: 'bearer ' + accessToken
+							    }
+						    }
+					    )
+					    .success(function(registerResponse, status, headers, config) {
+						    deferred.resolve(registerResponse);
+						    getLoginProviderUrl(userInfo.LoginProvider).then(function(url) {
+						      window.location.href = decodeURI(url);
+						    });
+					    })
+					    .error(function(errorData, status, headers, config) {
+						    if (errorData.ModelState) {
+							    deferred.reject(parseErrors(errorData));
+						    }
+						    else {
+							    deferred.reject(errorData.Message);
+						    }
+					    });
+			    }
+		    })
+		    .error(function(data, status, headers, config) {
+			    deferred.reject(data);
+		    });
+  		return deferred.promise;
     }
 
     function parseErrors(response) {
