@@ -7,23 +7,26 @@
 		.config(function(workbenchProvider) {});
 
 	function workbenchProvider() {
-		this.$get = ['$http', '$q', '$location', 'localStorageService', workbenchFactory];
+		this.$get = ['$http', '$q', '$cookies', '$location', 'localStorageService', workbenchFactory];
   };
 
-	function workbenchFactory($http, $q, $location, localStorageService) {
+	function workbenchFactory($http, $q, $cookies, $location, localStorageService) {
 
 		return {
 			someValue: function() { return 'a different value' },
 			getToken: getToken,
 			isAuthenticated: isAuthenticated,
 			getPosts: getPosts,
-      register: register,
+			register: register,
+			getLoginProviders: getLoginProviders,
       login: login,
-      logout: logout 
+      logout: logout, 
+      loginExternal: loginExternal
  	  }
 
     function getToken() {
 	    return localStorageService.get('token');
+	  //return $cookies.get('.AspNet.Cookies');
     }
 
     function isAuthenticated() {
@@ -50,7 +53,8 @@
 		}
 
 		function logout() {
-			localStorageService.remove('token');
+		  localStorageService.remove('token');
+		//$cookies.remove('.AspNet.Cookies');
 		}
 
 		function login(user) {
@@ -96,6 +100,71 @@
 				});
 			return deferred.promise;
 		}
+
+    function getLoginProviders() {
+			var deferred = $q.defer();
+			$http.get('/API/Account/ExternalLogins?returnUrl=%2FAngular%2FAccount%2FLogin&generateState=true')
+				.success(function(data, status, headers, config) {
+					deferred.resolve(data);
+				})
+				.error(function(data, status, headers, config) {
+					deferred.reject("Unable to retrieve social logins");
+				});
+			return deferred.promise;
+    }
+
+    function loginExternal() {
+			var deferred = $q.defer();
+	    var hash = $location.hash();
+
+	    if (!hash) {
+  			deferred.resolve(false);
+        return deferred.promise;
+	    }
+
+	    var hashObject = $.parseJSON('{"' + decodeURI(hash).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+	    var accessToken = hashObject.access_token;
+
+			$http.get(
+        '/api/Account/UserInfo',
+				{
+				  headers: {
+					  authorization: 'bearer ' + accessToken
+				  }		
+				}
+      )
+				.success(function(data, status, headers, config) {
+					deferred.resolve(data);
+				})
+				.error(function(data, status, headers, config) {
+					deferred.reject(data);
+				});
+	    deferred.promise.then(function(data) {
+		    if (!data.HasRegistered) {
+			    $http.post(
+            '/api/Account/RegisterExternal',
+					  {
+						  Email: data.Email
+					  },
+				    {
+				      headers: {
+					      authorization: 'bearer ' + accessToken
+				      }		
+				    }
+          )
+				    .success(function(data, status, headers, config) {
+					    console.log(data);
+					    deferred.resolve(data);
+				    })
+				    .error(function(data, status, headers, config) {
+					    console.log(data);
+					    deferred.reject(data);
+				    });
+		    }
+	    });
+			return deferred.promise;
+
+    }
 
 
 	}

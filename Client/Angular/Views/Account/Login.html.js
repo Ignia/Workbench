@@ -14,11 +14,33 @@
     vm.title   = 'Login Controller';
 	  vm.status  = 'Please enter your login credentials';
     vm.login   = login;
+	  vm.providers = [];
 
     activate();
 
-    function activate() {      
+    function activate() {
+	    loginExternal();
+	    getLoginProviders();
+    }
 
+    function loginExternal() {
+	    workbench.loginExternal()
+        .then(function(response) {
+			    console.log(response);
+		    })
+        .catch(function(response) {
+			    console.log(response);
+		    });
+    }
+
+    function getLoginProviders() {
+	    workbench.getLoginProviders()
+		    .then(function(response) {
+			    vm.providers = response;
+		    })
+        .catch(function(response) {
+			    vm.status = "There was an error loading the providers :(."
+		    });
     }
 
     function login(user) {

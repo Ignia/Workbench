@@ -6,3 +6,8 @@
   <br />Password: <input type="password" ng-model="vm.user.Password" />
   <input type="submit" ng-click="vm.login(vm.user)" value="Save" />
 </form>
+
+<p>Or, login using:</p>
+<ul>
+  <li ng-repeat="provider in vm.providers"><a ng-href="{{provider.Url}}">{{provider.Name}}</a></li>
+</ul>

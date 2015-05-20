@@ -5,17 +5,17 @@
 function configureRoutes($routeProvider) {
 	$routeProvider
 		.when('/Posts', {
-			templateUrl: '/Angular/Posts/Index.html',
+			templateUrl: '/Angular/Views/Posts/Index.html',
 			controller: 'PostsController',
       controllerAs: 'vm'
 		})
 		.when('/Account/Login', {
-			templateUrl: '/Angular/Account/Login.html',
+			templateUrl: '/Angular/Views/Account/Login.html',
 			controller: 'LoginController',
       controllerAs: 'vm'
 		})
 		.when('/Account/Register', {
-			templateUrl: '/Angular/Account/Register.html',
+			templateUrl: '/Angular/Views/Account/Register.html',
 			controller: 'RegisterController',
       controllerAs: 'vm'
 		})

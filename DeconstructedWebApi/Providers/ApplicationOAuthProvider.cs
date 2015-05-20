@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using Ignia.Workbench.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using Ignia.Workbench.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Ignia.Workbench.DeconstructedWebApi.Providers {
 
@@ -17,8 +17,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
   | CLASS: APPLICATION OAUTH PROVIDER
   \---------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
-  ///   
-  /// </summary>
+  ///   </summary>
   public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider {
 
     /*==========================================================================================================================
@@ -30,7 +29,7 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     | CONSTRUCTOR
     \-------------------------------------------------------------------------------------------------------------------------*/
     /// <summary>
-    ///   Initializes a new instance of the <see cref="ApplicationOAuthProvider"/> class.
+    ///   Initializes a new instance of the <see cref="ApplicationOAuthProvider" /> class.
     /// </summary>
     /// <param name="publicClientId">The public client identifier.</param>
     /// <exception cref="System.ArgumentNullException">publicClientId</exception>
@@ -74,6 +73,40 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
       context.Validated(ticket);
       context.Request.Context.Authentication.SignIn(cookiesIdentity);
 
+    }
+
+    /*==========================================================================================================================
+    | AUTHROIZATION ENDPOINT RESPONSE
+    >---------------------------------------------------------------------------------------------------------------------------
+    | ### NOTE JJC05192015: Approach borrowed from Rahul Nath's blog post:
+    | http://www.rahulpnath.com/blog/asp-dot-net-web-api-and-external-login-authenticating-with-social-networks/
+    \-------------------------------------------------------------------------------------------------------------------------*/
+    /// <summary>
+    ///   Manages the response from the authorization endpoint (e.g., /Api/Account/ExternalLogin/).
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns></returns>
+    public override Task AuthorizationEndpointResponse(OAuthAuthorizationEndpointResponseContext context) {
+      // Add the claims to the return url
+      string claims = "";
+      foreach (var claim in context.Identity.Claims) {
+        claims += claim.Type + ",";
+        if (claim.Type == ClaimsIdentity.DefaultNameClaimType) {
+          context.AdditionalResponseParameters.Add("username", claim.Value);
+        }
+        else if (claim.Type == ClaimTypes.Email) {
+          context.AdditionalResponseParameters.Add("email", claim.Value);
+        }
+        else if (claim.Type == "fbaddress") {
+          context.AdditionalResponseParameters.Add("fbaddress", claim.Value);
+        }
+        else if (claim.Type == "hello") {
+          context.AdditionalResponseParameters.Add("hello", claim.Value);
+        }
+      }
+      context.AdditionalResponseParameters.Add("foo", "bar");
+      context.AdditionalResponseParameters.Add("claims", claims);
+      return base.AuthorizationEndpointResponse(context);
     }
 
     /*==========================================================================================================================
@@ -126,7 +159,8 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
       if (context.ClientId == _publicClientId) {
         Uri expectedRootUri = new Uri(context.Request.Uri, "/");
 
-        if (expectedRootUri.AbsoluteUri == context.RedirectUri) {
+        //### NOTE JJC05182015: Updated validation logic to use StartsWith() instead of Equals() to allow all child URLs.
+        if (context.RedirectUri.StartsWith(expectedRootUri.AbsoluteUri)) {
           context.Validated();
         }
       }

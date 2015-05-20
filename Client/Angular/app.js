@@ -6,6 +6,7 @@
     .module('app', [
       // Angular modules 
       'ngRoute',
+      'ngCookies',
 
       // Custom modules 
 
@@ -14,8 +15,9 @@
 
     ])
 
-    .config(function (localStorageServiceProvider) {
+    .config(function (localStorageServiceProvider, $locationProvider) {
       localStorageServiceProvider.setPrefix('workbench');
+      $locationProvider.html5Mode(true);
     });
 
 })();
