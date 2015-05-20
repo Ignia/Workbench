@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Ignia.Workbench.DeconstructedWebApi.Providers;
+using Ignia.Workbench.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using Ignia.Workbench.DeconstructedWebApi.Providers;
-using Ignia.Workbench.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Constants = Ignia.Workbench.Models.Constants;
 
 namespace Ignia.Workbench.DeconstructedWebApi {
 
@@ -17,7 +21,7 @@ namespace Ignia.Workbench.DeconstructedWebApi {
   | CLASS: STARTUP
   \---------------------------------------------------------------------------------------------------------------------------*/
   /// <summary>
-  ///   Extends the global <see cref="Startup"/> class by providing methods it can use to configure authorization.
+  ///   Extends the global <see cref="Startup" /> class by providing methods it can use to configure authorization.
   /// </summary>
   public partial class Startup {
 
@@ -42,10 +46,11 @@ namespace Ignia.Workbench.DeconstructedWebApi {
     /*==========================================================================================================================
     | CONFIGURE AUTHENTICATION
     \-------------------------------------------------------------------------------------------------------------------------*/
+
     /// <summary>
-    ///   Extends the global <see cref="Startup"/> class to add authentication support to the OWIN pipeline (via the 
-    ///   <see cref="IAppBuilder"/> instance). For more details on configuring authentication, see 
-    ///   <seealso cref="http://go.microsoft.com/fwlink/?LinkId=301864"/>.
+    ///   Extends the global <see cref="Startup" /> class to add authentication support to the OWIN pipeline (via the <see
+    ///   cref="IAppBuilder" /> instance). For more details on configuring authentication, see <seealso
+    ///   cref="http://go.microsoft.com/fwlink/?LinkId=301864" />.
     /// </summary>
     /// <param name="app">The OWIN application pipeline.</param>
     public void ConfigureAuth(IAppBuilder app) {
@@ -58,11 +63,11 @@ namespace Ignia.Workbench.DeconstructedWebApi {
       app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
 
       /*------------------------------------------------------------------------------------------------------------------------
-      | Configue state storage 
+      | Configue state storage
       \-----------------------------------------------------------------------------------------------------------------------*/
-      //Enable the application to use a cookie to store information for the signed in user and to use a cookie to temporarily 
+      //Enable the application to use a cookie to store information for the signed in user and to use a cookie to temporarily
       //store information about a user logging in with a third party login provider
-      app.UseCookieAuthentication(new CookieAuthenticationOptions());
+      app.UseCookieAuthentication(new CookieAuthenticationOptions() { });
       app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
       /*------------------------------------------------------------------------------------------------------------------------
@@ -94,9 +99,28 @@ namespace Ignia.Workbench.DeconstructedWebApi {
       //    consumerKey: "",
       //    consumerSecret: "");
 
-      //app.UseFacebookAuthentication(
-      //    appId: "",
-      //    appSecret: "");
+      //### NOTE 05192015: Created custom Facebook provider to retrieve email as part of claim
+      //### HACK 05202015: Overwrote username with email since a) email claim isn't making it through, and b) Identity expects
+      //an email for external usernames.
+      var facebookAuthenticationProvider = new FacebookAuthenticationProvider() {
+        OnAuthenticated = (context) => {
+          var nameClaim = ((ClaimsIdentity)context.Identity).FindFirst(ClaimsIdentity.DefaultNameClaimType);
+          ((ClaimsIdentity)context.Identity).RemoveClaim(nameClaim);
+          context.Identity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, context.Email));
+          return Task.FromResult(0);
+        }
+      };
+
+      //### NOTE 05192015: Explicitly created options so the scope could be manually set.
+      var facebookAuthenticationOptions = new FacebookAuthenticationOptions() {
+        AppId = Constants.FacebookAppId,
+        AppSecret = Constants.FacebookAppSecret,
+        Provider = facebookAuthenticationProvider
+      };
+
+      facebookAuthenticationOptions.Scope.Add("email");
+
+      app.UseFacebookAuthentication(facebookAuthenticationOptions);
 
       //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
       //{

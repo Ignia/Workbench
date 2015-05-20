@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentCollection.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="PostCollection.cs" />
     <Compile Include="UserCollection.cs" />
     <Compile Include="WorkbenchContext.cs" />
