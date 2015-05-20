@@ -25,7 +25,6 @@
     }
 
     function loginExternal() {
-	    console.log('Entering loginExternal (controller)...');
 	    workbench.loginExternal()
         .then(function(response) {
           if (response) {

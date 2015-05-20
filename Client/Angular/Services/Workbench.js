@@ -55,7 +55,6 @@
 		}
 
 		function logout() {
-			console.log('Login token removed');
 		  localStorageService.remove('token');
 		}
 
@@ -137,12 +136,10 @@
 			var deferred = $q.defer();
 	    var hash = $location.hash();
 
-	    console.log('Entering loginExternal');
 	    if (!hash) {
   			deferred.resolve(false);
         return deferred.promise;
 	    }
-	    console.log(hash);
 
 	    var hashObject = $.parseJSON('{"' + decodeURI(hash).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
 	    var accessToken = hashObject.access_token;
