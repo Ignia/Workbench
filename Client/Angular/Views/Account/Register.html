@@ -6,8 +6,22 @@
 </ul>
 
 <form novalidate>
-  <br />E-mail: <input type="email" ng-model="vm.user.Email" />
-  <br />Password: <input type="password" ng-model="vm.user.Password" />
-  <br />Confirm Password: <input type="password" ng-model="vm.user.ConfirmPassword" />
+
+  <label>
+    E-mail
+    <br /><input type="email" ng-model="vm.user.Email" />
+  </label>
+
+  <label>
+    Password
+    <br /><input type="password" ng-model="vm.user.Password" />
+  </label>
+
+  <label>
+    Confirm Password
+    <br /><input type="password" ng-model="vm.user.ConfirmPassword" />
+  </label>
+
   <input type="submit" ng-click="vm.register(vm.user)" value="Save" />
+
 </form>

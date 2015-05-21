@@ -11,7 +11,7 @@
     /* jshint validthis:true */
     var vm = this;
     
-    vm.title   = 'Login Controller';
+    vm.title   = 'Login';
 	  vm.status  = 'Please enter your login credentials';
     vm.login   = login;
 	  vm.providers = [];

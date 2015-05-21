@@ -6,9 +6,18 @@
 </ul>
 
 <form novalidate>
-  <br />E-mail: <input type="email" ng-model="vm.user.Email" />
-  <br />Password: <input type="password" ng-model="vm.user.Password" />
+
+  <label>
+    E-mail 
+    <br /><input type="email" ng-model="vm.user.Email" />
+  </label>
+  <label>
+    Password
+    <br /><input type="password" ng-model="vm.user.Password" />
+  </label>
+
   <input type="submit" ng-click="vm.login(vm.user)" value="Save" />
+
 </form>
 
 <p>Or, login using:</p>

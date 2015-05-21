@@ -11,7 +11,7 @@
     /* jshint validthis:true */
     var vm = this;
     
-    vm.title   = 'Register Controller';
+    vm.title   = 'Registration';
 	  vm.status  = 'Please complete the following fields to register.';
     vm.errors  = [];
 
