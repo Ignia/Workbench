@@ -9,14 +9,14 @@
       'ngCookies',
 
       // Custom modules 
+      'aspNetIdentity',
 
       // 3rd Party Modules
       'LocalStorageModule'
 
     ])
 
-    .config(function (localStorageServiceProvider, $locationProvider) {
-      localStorageServiceProvider.setPrefix('workbench');
+    .config(function ($locationProvider) {
       $locationProvider.html5Mode(true);
     });
 

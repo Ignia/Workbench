@@ -5,9 +5,9 @@
     .module('app')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$location', 'workbench'];
+  LoginController.$inject = ['$location', 'aspNetIdentity', 'workbench'];
 
-  function LoginController($location, workbench) {
+  function LoginController($location, aspNetIdentity, workbench) {
     /* jshint validthis:true */
     var vm = this;
     
@@ -25,7 +25,7 @@
     }
 
     function loginExternal() {
-	    workbench.loginExternal()
+      aspNetIdentity.loginExternal()
         .then(function(response) {
           if (response) {
 			      vm.status = 'Successfully logged in';
@@ -39,7 +39,7 @@
     }
 
     function getLoginProviders() {
-	    workbench.getLoginProviders()
+      aspNetIdentity.getLoginProviders()
 		    .then(function(response) {
 			    vm.providers = response;
 		    })
@@ -49,7 +49,7 @@
     }
 
     function login(user) {
-	    workbench.login(user)
+      aspNetIdentity.login(user)
 		    .then(function(response) {
 			    vm.status = 'Successfully logged in as ' + response.userName;
           $location.path('/Posts');

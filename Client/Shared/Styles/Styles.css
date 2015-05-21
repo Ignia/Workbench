@@ -52,7 +52,6 @@ label {
 input {
   border: 1px solid #c0c0c0;
   padding: 4px 6px;
-  -ms-border-radius: 2px;
   border-radius: 2px;
   margin-top: 5px;
 }

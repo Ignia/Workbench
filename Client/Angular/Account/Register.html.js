@@ -5,9 +5,9 @@
     .module('app')
     .controller('RegisterController', RegisterController);
 
-  RegisterController.$inject = ['$location', 'workbench'];
+  RegisterController.$inject = ['$location', 'aspNetIdentity', 'workbench'];
 
-  function RegisterController($location, workbench) {
+  function RegisterController($location, aspNetIdentity, workbench) {
     /* jshint validthis:true */
     var vm = this;
     
@@ -24,7 +24,7 @@
     }
 
     function register(user) {
-      workbench.register(user)
+      aspNetIdentity.register(user)
         .then(function(response) {
           vm.status = 'User ' + user.email + 'created.';
           $location.path('/');
