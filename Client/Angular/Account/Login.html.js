@@ -29,7 +29,7 @@
         .then(function(response) {
           if (response) {
 			      vm.status = 'Successfully logged in';
-            $location.path('/Posts');
+            $location.url('/Posts');
           }
 		    })
         .catch(function(response) {

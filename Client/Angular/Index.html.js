@@ -5,14 +5,14 @@
     .module('app')
     .controller('HomeController', HomeController);
 
-  HomeController.$inject = ['$location', 'workbench'];
+  HomeController.$inject = ['$location', 'aspNetIdentity', 'workbench'];
 
-  function HomeController($location, workbench) {
+  function HomeController($location, aspNetIdentity, workbench) {
     /* jshint validthis:true */
     var vm = this;
     
     vm.title   = 'Home Controller';
-	  vm.isAuthenticated = workbench.isAuthenticated;
+	  vm.isAuthenticated = aspNetIdentity.isAuthenticated;
 	  vm.logout = logout;
 
     activate();
@@ -22,7 +22,7 @@
     }
 
 	  function logout() {
-		  workbench.logout();
+		  aspNetIdentity.logout();
 		  $location.url('/Account/Login');
 	  }
 
