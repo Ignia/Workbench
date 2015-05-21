@@ -963,7 +963,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2002</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://test.workbench.ignia.com/</IISUrl>
+          <IISUrl>http://localhost/</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
           <IISAppRootUrl>http://test.workbench.ignia.com</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
