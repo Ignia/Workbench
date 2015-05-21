@@ -5,7 +5,18 @@
 
 h1, h2, h3, h4, h5 {
   font-weight: normal;
-  margin: 5px;
+}
+
+h3, h4, h5 {
+  margin-bottom: 5px;
+}
+
+h4 {
+  font-style: italic;
+}
+
+ul {
+  margin-top: 3px;
 }
 
 nav > ul {
@@ -40,4 +51,8 @@ label {
 
 input {
   border: 1px solid #c0c0c0;
+  padding: 4px 6px;
+  -ms-border-radius: 2px;
+  border-radius: 2px;
+  margin-top: 5px;
 }
