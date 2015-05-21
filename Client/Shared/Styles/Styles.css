@@ -1,7 +1,43 @@
 ﻿body {
   font-family: 'Calibri', 'Arial', 'Helvetica', sans-serif;
+  margin: 0px;
 }
 
 h1, h2, h3, h4, h5 {
   font-weight: normal;
+  margin: 5px;
+}
+
+nav > ul {
+  background-color: #a9a9a9;
+  display: block;
+  line-height: 30px;
+  height: 30px;
+  padding: 0px;
+  margin: 0px;
+}
+
+nav > ul > li {
+  padding-left: 20px;
+  display: inline;
+  list-style-type: none;
+}
+
+nav > ul > li > a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+header h1,
+main {
+  margin: 20px;
+}
+
+label {
+  display: block;
+  margin: 10px 0px;
+}
+
+input {
+  border: 1px solid #c0c0c0;
 }
