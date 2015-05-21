@@ -1,10 +1,10 @@
-﻿<br />{{vm.title}}
-<br />{{vm.someValue}}
+﻿<h2>{{vm.title}}</h2>
+
 <div ng-repeat="post in vm.posts">
   <h3>{{post.Title}}</h3>
   {{post.Body}}
   <div>
-    <em>Comments</em>
+    <h4>Comments</h4>
     <ul>
       <li ng-repeat="comment in post.Comments">
         {{comment.Body}}
