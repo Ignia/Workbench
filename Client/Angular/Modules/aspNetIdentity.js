@@ -45,17 +45,23 @@
   */
   function aspNetIdentityFactory($http, $q, $location, localStorageService) {
 
-    var loginProviders;
-
+  /*============================================================================================================================
+  | RETURN SERVICE
+  \---------------------------------------------------------------------------------------------------------------------------*/
     return {
-      getToken: getToken,
-      isAuthenticated: isAuthenticated,
-      register: register,
-      getLoginProviders: getLoginProviders,
-      login: login,
-      logout: logout,
-      loginExternal: loginExternal
+      getToken                  : getToken                      ,
+      isAuthenticated           : isAuthenticated               ,
+      register                  : register                      ,
+      getLoginProviders         : getLoginProviders             ,
+      login                     : login                         ,
+      logout                    : logout                        ,
+      loginExternal             : loginExternal
     }
+
+  /*============================================================================================================================
+  | DECLARE LOCAL VARIABLES
+  \---------------------------------------------------------------------------------------------------------------------------*/
+    var loginProviders;
 
   /*============================================================================================================================
   | METHOD: GET TOKEN
