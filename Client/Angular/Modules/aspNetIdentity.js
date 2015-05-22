@@ -3,27 +3,32 @@
 
   angular
 
-    .module('aspNetIdentity', [
-      // Angular modules 
-
-      // Custom modules 
-
-      // 3rd Party Modules
-      'LocalStorageModule'
-
-    ])
-
+    .module('aspNetIdentity', ['LocalStorageModule'])
     .config(function (localStorageServiceProvider, aspNetIdentityProvider) {
       localStorageServiceProvider.setPrefix('aspNetIdentity');
     })
-
   	.provider('aspNetIdentity', aspNetIdentityProvider);
 
-
+/** @ngdoc provider
+  * @name aspNetIdentityProvider
+  * @description
+  * Provides data access to the OWIN and /Api/Account/ endpoints exposed by the out-of-the-box "Web API" project template.
+  */
   function aspNetIdentityProvider() {
     this.$get = ['$http', '$q', '$location', 'localStorageService', aspNetIdentityFactory];
   };
 
+/** @ngdoc service
+  * @name  aspNetIdentityFactory
+  * 
+  * @requires $http 
+  * @requires $q
+  * @requires $location
+  * @requires localStorageService
+  * 
+  * @description
+  * Provides data access to the OWIN and /Api/Account/ endpoints exposed by the out-of-the-box "Web API" project template.
+  */
   function aspNetIdentityFactory($http, $q, $location, localStorageService) {
 
     var loginProviders;
@@ -38,19 +43,47 @@
       loginExternal: loginExternal
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#getToken
+    * @kind  function
+    * @description Retrieves the ASP.NET access token from local storage.
+    *
+    * @return {string} The ASP.NET access token.
+    */
     function getToken() {
       return localStorageService.get('token');
       //return $cookies.get('.AspNet.Cookies');
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#isAuthenticated
+    * @kind  function
+    * @description Determines whether the current user is authenticated or not by evaluating the presence of an access token.
+    *
+    * @return {bool} The user's authentication status.
+    */
     function isAuthenticated() {
       return (getToken()) ? true : false;
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#logout
+    * @kind  function
+    * @description Logs the user out by removing their access token, and clearing any other state variables.
+    */
     function logout() {
       localStorageService.remove('token');
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#login
+    * @kind  function
+    * @description Logs a user into the system with their username (email) and password credentials via OWIN's `/Token` endpoint. 
+    *
+    * @param {object=} user An object containing an `Email` property and a `Password` property.  
+    *
+    * @return {promise} The login callback promise.
+    */
     function login(user) {
       var deferred = $q.defer();
       $http.post(
@@ -78,6 +111,15 @@
       return deferred.promise;
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#register
+    * @kind  function
+    * @description Registers a user based on a username (email) and password via ASP.NET's `/API/Account/Register` endpoint.
+    *
+    * @param {object=} user An object containing an `Email` property, `Password` property, and `ConfirmPassword` property.  
+    *
+    * @return {promise} The registration callback promise.
+    */
     function register(user) {
       var deferred = $q.defer();
       $http.post('/API/Account/Register', user)
@@ -95,6 +137,15 @@
       return deferred.promise;
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#getLoginProviders
+    * @kind  function
+    * @description Retrieves a list of available third-party login providers, such as Facebook or Twitter, which the application 
+    * is configured to accept. Each contains a name and a URL, which should be presented to the user as a list of login links. 
+    * The results are cached locally.
+    *
+    * @return {promise} The login provider's callback promise.
+    */
     function getLoginProviders() {
       var deferred = $q.defer();
       if (loginProviders) {
@@ -112,6 +163,14 @@
       return deferred.promise;
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#getLoginProviderUrl
+    * @kind  function
+    * @description Given a login provider name (e.g., `Facebook`) will lookup the provider via the 
+    * {@link aspNetIdentity#getLoginProviders getLoginProviders} method.
+    *
+    * @return {string} The URL of the login provider, if found; otherwise `null`.
+    */
     function getLoginProviderUrl(name) {
       return getLoginProviders().then(function (data) {
         var output = null;
@@ -125,6 +184,18 @@
       });
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#loginExternal
+    * @kind  function
+    * @description Checks for the presence of an access token (via the `#access_token` hash parameter) generated on for users 
+    * authenticated via a third-party service (such as Facebook). If found, the access token is extracted and used to determine 
+    * if the user has registered or not. If the user has not registered, they are registered via Web API's 
+    * `/API/Account/RegisterExternal` service. Once that's done, the user is sent back through the login service (retrieved 
+    * using the {@link aspNetIdentity#getLoginServiceUrl getLoginServiceUrl()} method), which then generates a final access 
+    * token. At that point, this method can be called again to log the user in by storing their access token via local storage. 
+    *
+    * @return {promise} The external login callback promise.
+    */
     function loginExternal() {
       var deferred = $q.defer();
       var hash = $location.hash();
@@ -184,6 +255,16 @@
       return deferred.promise;
     }
 
+  /** @ngdoc method
+    * @name  aspNetIdentity#parseErrors
+    * @kind  function
+    * @description Parses a standard error response from Web API into a string array so that it can be easily consumed by 
+    * Angular via an {@link ng.ngRepeat ngRepeat} directive. It is specifically intended to operate with `ModelState` 
+    * errors. As part of this process, the error data is flattened and the context (e.g., associated property name) is 
+    * removed.
+    *
+    * @return {array} A string array of error messages.
+    */
     function parseErrors(response) {
       var errors = [];
       for (var key in response.ModelState) {
