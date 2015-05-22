@@ -46,22 +46,25 @@
   function aspNetIdentityFactory($http, $q, $location, localStorageService) {
 
   /*============================================================================================================================
+  | DECLARE LOCAL VARIABLES
+  \---------------------------------------------------------------------------------------------------------------------------*/
+    var loginProviders;
+
+  /*============================================================================================================================
   | RETURN SERVICE
   \---------------------------------------------------------------------------------------------------------------------------*/
     return {
       getToken                  : getToken                      ,
       isAuthenticated           : isAuthenticated               ,
-      register                  : register                      ,
-      getLoginProviders         : getLoginProviders             ,
+      getUserInfo               : getUserInfo                   ,
       login                     : login                         ,
-      logout                    : logout                        ,
-      loginExternal             : loginExternal
+      loginExternal             : loginExternal                 ,
+      register                  : register                      ,
+      registerExternal          : registerExternal              ,
+      getLoginProviders         : getLoginProviders             ,
+      getLoginProviderUrl       : getLoginProviderUrl           ,
+      logout                    : logout                        
     }
-
-  /*============================================================================================================================
-  | DECLARE LOCAL VARIABLES
-  \---------------------------------------------------------------------------------------------------------------------------*/
-    var loginProviders;
 
   /*============================================================================================================================
   | METHOD: GET TOKEN
@@ -69,13 +72,14 @@
   /** @ngdoc method
     * @name  aspNetIdentity#getToken
     * @kind  function
-    * @description Retrieves the ASP.NET access token from local storage.
+    * @description Retrieves the ASP.NET access token from either the hash, for external logins, or from the local storage, for
+    * persistant tokens stored by this service. 
     *
     * @return {string} The ASP.NET access token.
     */
     function getToken() {
-      return localStorageService.get('token');
-      //return $cookies.get('.AspNet.Cookies');
+      var accessToken = parseHashAsQueryString().access_token;
+      return accessToken || localStorageService.get('token');
     }
 
   /*============================================================================================================================
@@ -132,14 +136,12 @@
 			  }
       )
 				.success(function (data, status, headers, config) {
+				  localStorageService.set('token', data.access_token);
 				  deferred.resolve(data);
 				})
 				.error(function (data, status, headers, config) {
 				  deferred.reject(data.error_description);
 				});
-      deferred.promise.then(function (response) {
-        localStorageService.set('token', response.access_token);
-      });
       return deferred.promise;
     }
 
@@ -168,6 +170,35 @@
 				  else {
 				    deferred.reject(data.Message);
 				  }
+				});
+      return deferred.promise;
+    }
+
+  /*============================================================================================================================
+  | METHOD: GET USER INFO
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#getUserInfo
+    * @kind  function
+    * @description Retrieves information on the currently authenticated user based on their access token.
+    *
+    * @return {promise} The user info callback promise.
+    */
+    function getUserInfo() {
+      var deferred = $q.defer();
+      $http.get(
+        '/api/Account/UserInfo',
+        {
+          headers: {
+            authorization: 'bearer ' + getToken()
+          }
+        }
+      )
+				.success(function (data, status, headers, config) {
+				  deferred.resolve(data);
+				})
+				.error(function (data, status, headers, config) {
+				  deferred.reject(data.Message);
 				});
       return deferred.promise;
     }
@@ -226,6 +257,46 @@
     }
 
   /*============================================================================================================================
+  | METHOD: REGISTER EXTERNAL
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#registerExternal
+    * @kind  function
+    * @description Registers a user who is authenticated via an external login provider (e.g., Facebook).
+    * 
+    * @param {string} email The email address to associate the user with.  
+    *
+    * @return {promise} The external registration callback promise.
+    */
+    function registerExternal(email) {
+      var deferred = $q.defer();
+
+      $http.post(
+        '/api/Account/RegisterExternal',
+        {
+          Email: email
+        },
+        {
+          headers: {
+            authorization: 'bearer ' + getToken()
+          }
+        }
+      )
+        .success(function (registerResponse, status, headers, config) {
+          deferred.resolve(registerResponse);
+        })
+        .error(function (errorData, status, headers, config) {
+          if (errorData.ModelState) {
+            deferred.reject(parseErrors(errorData));
+          }
+          else {
+            deferred.reject(errorData.Message);
+          }
+        });
+      return deferred.promise;
+    }
+
+  /*============================================================================================================================
   | METHOD: LOGIN EXTERNAL
   \---------------------------------------------------------------------------------------------------------------------------*/
   /** @ngdoc method
@@ -249,54 +320,46 @@
         return deferred.promise;
       }
 
-      var hashObject = $.parseJSON('{"' + decodeURI(hash).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
-      var accessToken = hashObject.access_token;
+      var accessToken = parseHashAsQueryString().access_token;
 
-      $http.get(
-			    '/api/Account/UserInfo',
-			    {
-			      headers: {
-			        authorization: 'bearer ' + accessToken
-			      }
-			    }
-		    )
-		    .success(function (userInfo, status, headers, config) {
-		      if (userInfo.HasRegistered) {
-		        deferred.resolve(true);
-		        localStorageService.set('token', accessToken);
-		      }
-		      else {
-		        $http.post(
-						    '/api/Account/RegisterExternal',
-						    {
-						      Email: userInfo.Email
-						    },
-						    {
-						      headers: {
-						        authorization: 'bearer ' + accessToken
-						      }
-						    }
-					    )
-					    .success(function (registerResponse, status, headers, config) {
-					      deferred.resolve(registerResponse);
-					      getLoginProviderUrl(userInfo.LoginProvider).then(function (url) {
-					        window.location.href = decodeURI(url);
-					      });
-					    })
-					    .error(function (errorData, status, headers, config) {
-					      if (errorData.ModelState) {
-					        deferred.reject(parseErrors(errorData));
-					      }
-					      else {
-					        deferred.reject(errorData.Message);
-					      }
-					    });
-		      }
-		    })
-		    .error(function (data, status, headers, config) {
-		      deferred.reject(data);
-		    });
+      var userInfoPromise = getUserInfo();
+
+      var registrationPromise = userInfoPromise.then(function(userInfo, status, headers, config) {
+        if (userInfo.HasRegistered) {
+          localStorageService.set('token', accessToken);
+          deferred.resolve(true);
+          return;
+        }
+        registerExternal(userInfo.Email).then(function(registerResponse, status, headers, config) {
+          deferred.resolve(registerResponse);
+          getLoginProviderUrl(userInfo.LoginProvider).then(function(url) {
+            window.location.href = decodeURI(url);
+          });
+        });
+      });
+
+      registrationPromise.catch(function (data, status, headers, config) {
+		    deferred.reject(data);
+		  });
+
       return deferred.promise;
+
+    }
+
+  /*============================================================================================================================
+  | METHOD: PARSE HASH AS QUERY STRING
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#parseHashAsQueryString
+    * @kind  function
+    * @description Parses the URL's based on query string conventions (e.g., `&key=value`).
+    *
+    * @return {object} A JavaScript object representing the key and value pairs.
+    */
+    function parseHashAsQueryString() {
+      var hash = $location.hash();
+      if (!hash || hash.indexOf('=') < 0) return {};
+      return $.parseJSON('{"' + decodeURI(hash).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
     }
 
   /*============================================================================================================================
