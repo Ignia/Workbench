@@ -1,4 +1,14 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿/*==============================================================================================================================
+| Author        Jeremy Caney (Jeremy.Caney@Ignia.com)
+| Client        Ignia
+| Project       Workbench
+>===============================================================================================================================
+| Revisions     Date        Author              Comments
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+|               29.04.15    Jeremy Caney        Created initial version.
+\=============================================================================================================================*/
+
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;

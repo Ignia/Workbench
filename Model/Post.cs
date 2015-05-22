@@ -1,4 +1,14 @@
-﻿using System;
+﻿/*==============================================================================================================================
+| Author        Jeremy Caney (Jeremy.Caney@Ignia.com)
+| Client        Ignia
+| Project       Workbench
+>===============================================================================================================================
+| Revisions     Date        Author              Comments
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+|               29.04.15    Jeremy Caney        Created initial version.
+\=============================================================================================================================*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

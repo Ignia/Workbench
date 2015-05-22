@@ -1,4 +1,14 @@
-﻿using System.Security.Claims;
+﻿/*==============================================================================================================================
+| Author        Jeremy Caney (Jeremy.Caney@Ignia.com)
+| Client        Ignia
+| Project       Workbench
+>===============================================================================================================================
+| Revisions     Date        Author              Comments
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+|               29.04.15    Jeremy Caney        Created initial version.
+\=============================================================================================================================*/
+
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNet.Identity;
