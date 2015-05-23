@@ -8,6 +8,7 @@ While the Deconstructed Web API seeks to maintain parity with the out-of-the-box
 - Entity Framework dependencies have been moved to the `Model` project for integration with the data model.
 - Web API OData controllers have been added for `Comments` and `Posts` based on the `Model` project.
 
+> *Important:* In the `Startup.Auth.cs` file, this template overrides the `FacebookAuthenticationProvider` class's `OnAuthenticated` property in order to set the `DefaultNameClaimType` to `Email` instead of `Username`, and also adds the `email` property to the `FacebookAuthenticationOptions.Scope` collection. This allows the Web API's external token for Facebook to be used with the Web API's `/Api/Account/RegisterExternal` endpoint (which expects an email address for the username), and `/Api/Account/UserInfo` (which expects that the token's username claim will match that same email address).
 
 ## Removed Files
 The out-of-the-box Web API template includes a number of dependencies in order to support Web API Help pages. While Web API Help pages are useful, they a) necessitate a much larger footprint for the project, and b) are only compatible with the basic Web API controller (not the Web API OData controller). For these reasons, the following have been removed from the out-of-the-box template:
