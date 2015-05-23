@@ -88,24 +88,11 @@ namespace Ignia.Workbench.DeconstructedWebApi.Providers {
     /// <returns></returns>
     public override Task AuthorizationEndpointResponse(OAuthAuthorizationEndpointResponseContext context) {
       // Add the claims to the return url
-      string claims = "";
       foreach (var claim in context.Identity.Claims) {
-        claims += claim.Type + ",";
         if (claim.Type == ClaimsIdentity.DefaultNameClaimType) {
           context.AdditionalResponseParameters.Add("username", claim.Value);
         }
-        else if (claim.Type == ClaimTypes.Email) {
-          context.AdditionalResponseParameters.Add("email", claim.Value);
-        }
-        else if (claim.Type == "fbaddress") {
-          context.AdditionalResponseParameters.Add("fbaddress", claim.Value);
-        }
-        else if (claim.Type == "hello") {
-          context.AdditionalResponseParameters.Add("hello", claim.Value);
-        }
       }
-      context.AdditionalResponseParameters.Add("foo", "bar");
-      context.AdditionalResponseParameters.Add("claims", claims);
       return base.AuthorizationEndpointResponse(context);
     }
 
