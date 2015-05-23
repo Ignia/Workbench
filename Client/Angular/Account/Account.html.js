@@ -3,18 +3,28 @@
 
   angular
     .module('app')
-    .controller('LoginController', LoginController);
+    .controller('AccountController', AccountController);
 
-  LoginController.$inject = ['$location', 'aspNetIdentity', 'workbench'];
+  AccountController.$inject = ['$route', '$location', 'aspNetIdentity', 'workbench'];
 
-  function LoginController($location, aspNetIdentity, workbench) {
+  function AccountController($route, $location, aspNetIdentity, workbench) {
     /* jshint validthis:true */
     var vm = this;
+
+    vm.isRegistration = $route.current.params.action.match(/register/i);
     
-    vm.title   = 'Login';
-	  vm.status  = 'Please enter your login credentials';
-    vm.login   = login;
-	  vm.providers = [];
+    if (vm.isRegistration) {
+      vm.title = 'Registration';
+      vm.status = 'Please complete the following fields to register.';
+      vm.submit = register;
+    }
+    else {
+      vm.title = 'Login';
+      vm.status = 'Please enter your login credentials';
+      vm.submit = login;
+    }
+
+    vm.providers = [];
 	  vm.errors = [];
 
     activate();
@@ -22,6 +32,19 @@
     function activate() {
 	    loginExternal();
 	    getLoginProviders();
+    }
+
+
+    function register(user) {
+      aspNetIdentity.register(user)
+        .then(function (response) {
+          vm.status = 'User ' + user.email + 'created.';
+          $location.path('/');
+        })
+        .catch(function (error) {
+          vm.status = "The following errors were identified with your input:";
+          vm.errors = error;
+        });
     }
 
     function loginExternal() {

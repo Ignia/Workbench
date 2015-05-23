@@ -56,6 +56,11 @@ input {
   margin-top: 5px;
 }
 
+.account, .external-account {
+  width: 300px;
+  float: left;
+}
+
 .post {
   width: 250px;
   float: left;

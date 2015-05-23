@@ -9,14 +9,9 @@ function configureRoutes($routeProvider) {
 			controller: 'PostsController',
       controllerAs: 'vm'
 		})
-		.when('/Account/Login', {
-			templateUrl: '/Angular/Account/Login.html',
-			controller: 'LoginController',
-      controllerAs: 'vm'
-		})
-		.when('/Account/Register', {
-			templateUrl: '/Angular/Account/Register.html',
-			controller: 'RegisterController',
+		.when('/Account/:action', {
+		  templateUrl: '/Angular/Account/Account.html',
+		  controller: 'AccountController',
       controllerAs: 'vm'
 		})
 		.otherwise({

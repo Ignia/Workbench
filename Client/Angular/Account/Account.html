@@ -5,7 +5,9 @@
   <li ng-repeat="error in vm.errors">{{error}}</li>
 </ul>
 
-<form novalidate>
+<p />
+
+<form novalidate class="account">
 
   <label>
     E-mail
@@ -17,11 +19,18 @@
     <br /><input type="password" ng-model="vm.user.Password" />
   </label>
 
-  <label>
+  <label ng-show="vm.isRegistration">
     Confirm Password
     <br /><input type="password" ng-model="vm.user.ConfirmPassword" />
   </label>
 
-  <input type="submit" ng-click="vm.register(vm.user)" value="Save" />
+  <input type="submit" ng-click="vm.submit(vm.user)" value="Save" />
 
 </form>
+
+<section class="external-account">
+  <p>Or, login using:</p>
+  <ul>
+    <li ng-repeat="provider in vm.providers"><a ng-href="{{provider.Url}}">{{provider.Name}}</a></li>
+  </ul>
+</section>
