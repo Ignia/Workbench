@@ -114,13 +114,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Angular\Views\Account\Register.html" />
-    <Content Include="Angular\Views\Account\Login.html" />
-    <Content Include="Angular\Views\Account\Register.html.js" />
-    <Content Include="Angular\Views\Account\Login.html.js" />
+    <Content Include="Angular\Account\Account.html" />
+    <Content Include="Angular\Account\Account.html.js" />
     <Content Include="Angular\app.routes.js" />
-    <Content Include="Angular\Views\Posts\Index.html" />
-    <Content Include="Angular\Views\Posts\Index.html.js" />
+    <Content Include="Angular\Modules\aspNetIdentity.js" />
+    <Content Include="Angular\Posts\Posts.html" />
+    <Content Include="Angular\Posts\Posts.html.js" />
     <Content Include="Facebook\Facebook.js" />
     <Content Include="Facebook\Index.html" />
     <Content Include="packages.config" />
@@ -946,6 +945,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Angular\Directives\" />
+    <Folder Include="Angular\Views\" />
     <Folder Include="App_Data\" />
     <Folder Include="Images\" />
   </ItemGroup>
