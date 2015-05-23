@@ -8,6 +8,7 @@ While the Deconstructed Web API seeks to maintain parity with the out-of-the-box
 - Entity Framework dependencies have been moved to the `Model` project for integration with the data model.
 - Web API OData controllers have been added for `Comments` and `Posts` based on the `Model` project.
 
+
 ## Removed Files
 The out-of-the-box Web API template includes a number of dependencies in order to support Web API Help pages. While Web API Help pages are useful, they a) necessitate a much larger footprint for the project, and b) are only compatible with the basic Web API controller (not the Web API OData controller). For these reasons, the following have been removed from the out-of-the-box template:
 ```
