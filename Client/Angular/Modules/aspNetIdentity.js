@@ -9,6 +9,8 @@
 | Revisions     Date        Author              Comments
 |- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 |               21.05.15    Jeremy Caney        Created initial version.
+>===============================================================================================================================
+| ### TODO JJC052615: Centralize post and get logic into one or two helper functions.
 \=============================================================================================================================*/
   angular
     .module('aspNetIdentity', ['LocalStorageModule'])
@@ -141,6 +143,158 @@
 				})
 				.error(function (data, status, headers, config) {
 				  deferred.reject(data.error_description);
+				});
+      return deferred.promise;
+    }
+
+  /*============================================================================================================================
+  | METHOD: CHANGE PASSWORD
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#ChangePassword
+    * @kind  function
+    * @description Changes the password of the currently authenticated user.
+    *
+    * @param {object=} options An object containing an `OldPassword` , `NewPassword`, and `ConfirmPassword` properties.  
+    *
+    * @return {promise} The change password callback promise.
+    */
+    function changePassword(options) {
+      var deferred = $q.defer();
+      $http.post('/API/Account/ChangePassword', options)
+				.success(function (data, status, headers, config) {
+				  deferred.resolve(data);
+				})
+				.error(function (data, status, headers, config) {
+				  if (data.ModelState) {
+				    deferred.reject(parseErrors(data));
+				  }
+				  else {
+				    deferred.reject(data.Message);
+				  }
+				});
+      return deferred.promise;
+    }
+
+  /*============================================================================================================================
+  | METHOD: SET PASSWORD
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#SetPassword
+    * @kind  function
+    * @description Sets the password of the currently authenticated user. This is useful for users who originally registered via 
+    * an external account, and now wish to establish a password for that account. This method is not suitable for users who 
+    * already have a password; in those scenarios, use the {@link aspNetIdentity#changePassword changePassword} method instead. 
+    *
+    * @param {object=} options An object containing a `NewPassword` and `ConfirmPassword` properties.  
+    *
+    * @return {promise} The set password callback promise.
+    */
+    function changePassword(options) {
+      var deferred = $q.defer();
+      $http.post('/API/Account/SetPassword', options)
+				.success(function (data, status, headers, config) {
+				  deferred.resolve(data);
+				})
+				.error(function (data, status, headers, config) {
+				  if (data.ModelState) {
+				    deferred.reject(parseErrors(data));
+				  }
+				  else {
+				    deferred.reject(data.Message);
+				  }
+				});
+      return deferred.promise;
+    }
+
+  /*============================================================================================================================
+  | METHOD: ADD EXTERNAL LOGIN
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#addExternalLogin
+    * @kind  function
+    * @description Associates an external account (e.g., Facebook) with a current user, thus allowing them to authenticate using
+    * additional accounts. When the user is registered using {@link aspNetIdentity#registerExternal registerExternal} this is 
+    * automatically performed for that provider. 
+    *
+    * @param {object=} options An object containing a single `ExternalAccessToken` property.  
+    *
+    * @return {promise} The add external login callback promise.
+    */
+    function addExternalLogin(options) {
+      var deferred = $q.defer();
+      $http.post('/API/Account/AddExternalLogin', options)
+				.success(function (data, status, headers, config) {
+				  deferred.resolve(data);
+				})
+				.error(function (data, status, headers, config) {
+				  if (data.ModelState) {
+				    deferred.reject(parseErrors(data));
+				  }
+				  else {
+				    deferred.reject(data.Message);
+				  }
+				});
+      return deferred.promise;
+    }
+
+  /*============================================================================================================================
+  | METHOD: REMOVE LOGIN
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#removeLogin
+    * @kind  function
+    * @description Removes an external authentication method (e.g., `Facebook`) from a user's account. This does not remove the 
+    * account itself, only the ability for the user to authenticate given the specified provider. 
+    *
+    * @param {object=} options An object containing a `LoginProvider` and `ProviderKey` property.  
+    *
+    * @return {promise} The remove login callback promise.
+    */
+    function removeLogin(options) {
+      var deferred = $q.defer();
+      $http.post('/API/Account/RemoveLogin', options)
+				.success(function (data, status, headers, config) {
+				  deferred.resolve(data);
+				})
+				.error(function (data, status, headers, config) {
+				  if (data.ModelState) {
+				    deferred.reject(parseErrors(data));
+				  }
+				  else {
+				    deferred.reject(data.Message);
+				  }
+				});
+      return deferred.promise;
+    }
+
+  /*============================================================================================================================
+  | METHOD: MANAGE INFO
+  >-----------------------------------------------------------------------------------------------------------------------------
+  | ### TODO JJC052615: Need to add code to automatically set default for ReturnUrl. Should do something similar for 
+  | getExternalLogins() method.
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#manageInfo
+    * @kind  function
+    * @description Retrieves a list of authentication options associated with the current user account.
+    *
+    * @param {string} returnUrl The URL that users should be redirected to if an external login is performed. No redirect is 
+    * performed as part of this method, but the parameter is used to assemble the correct URL for any external logins (e.g., 
+    * `Facebook`). The default is the current URL.
+    * @param {string} generateState Determines whether any external login URLs retrieved for the current users should include
+    * state information or not. The default is false.  
+    *
+    * @return {promise} The manage info callback promise.
+    */
+    function manageInfo(returnUrl, generateState) {
+      var deferred = $q.defer();
+      $http.get('/API/Account/ManageInfo?returnUrl=' + encodeURI(returnUrl) + '&generateState=' + (generateState || false))
+				.success(function (data, status, headers, config) {
+				  deferred.resolve(data);
+				})
+				.error(function (data, status, headers, config) {
+  		    deferred.reject(data.Message);
 				});
       return deferred.promise;
     }
