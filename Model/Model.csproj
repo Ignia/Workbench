@@ -54,15 +54,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommentCollection.cs" />
+    <Compile Include="Collections\CommentCollection.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="PostCollection.cs" />
-    <Compile Include="UserCollection.cs" />
+    <Compile Include="Collections\PostCollection.cs" />
+    <Compile Include="Collections\UserCollection.cs" />
     <Compile Include="WorkbenchContext.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="Comment.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\Comment.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Post.cs" />
+    <Compile Include="Entities\Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
