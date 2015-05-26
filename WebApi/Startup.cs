@@ -1,29 +1,24 @@
-﻿using Ignia.Workbench.WebApi;
+﻿using Microsoft.Owin;
+using Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Routing;
 
-namespace Ignia.Workbench.Client {
+[assembly: OwinStartup(typeof(Ignia.Workbench.WebApi.Startup))]
+
+namespace Ignia.Workbench.WebApi {
 
   /*============================================================================================================================
-  | CLASS: WEB API APPLICATION (HTTP APPLICATION)
+  | CLASS: STARTUP
   \---------------------------------------------------------------------------------------------------------------------------*/
-  public class WebApiApplication : System.Web.HttpApplication {
+  public partial class Startup {
 
     /*==========================================================================================================================
-    | EVENT: APPLICATION START
+    | METHOD: CONFIGURATION
     \-------------------------------------------------------------------------------------------------------------------------*/
-    protected void Application_Start() {
-
-      //Configure Web API routes and global settings
-      GlobalConfiguration.Configure(WebApiConfig.Register);
-
-      //Add optional global filters to the GlobalFilters repository
-      //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-
+    public virtual void Configuration(IAppBuilder app) {
+      ConfigureAuth(app);
     }
-  }
-}
+
+  } //Class
+} //Namespace

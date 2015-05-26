@@ -1,4 +1,4 @@
-namespace Ignia.Workbench.DeconstructedWebApi.Migrations {
+namespace Ignia.Workbench.WebApi.Migrations {
   using System;
   using System.Data.Entity;
   using System.Data.Entity.Migrations;

@@ -7,7 +7,7 @@ The Ignia Workbench is composed of a series of projects which coordinate with on
 ## [Model](./Model/)
 A baseline C# data model alongside an Entity Framework 6.x implementation for persisting the model to a SQL database. Additionally the model project implements `IdentityUser` and `IdentityDbContext` so that it can be integrated with ASP.NET Identity. The basic data model includes `User`, `Post`, and `Comment` classes, along with relationships such as `Following`, `Likes`, etc. 
 
-## [Web API](./DeconstructedWebApi/)
+## [Web API](./WebApi/)
 A stripped-down version of Visual Studio's out-of-the-box Web API 2.x project template to provide bare-bones support for, in particular, ASP.NET Identity web services (e.g., `/Api/Account/Register/`). Does not include any of the MVC, Web API Help, or other web-based devependencies that ship with the out-of-the-box template. Additionally includes an OData controller for exposing other elements from the `Model` project, including `User`, `Post`, and `Comment` end points.
 
 ## [Client](./Client/)

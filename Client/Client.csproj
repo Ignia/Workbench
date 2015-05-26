@@ -934,13 +934,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeconstructedWebApi\DeconstructedWebApi.csproj">
-      <Project>{bf97de0c-15c1-437b-8e0f-184d8d13990b}</Project>
-      <Name>DeconstructedWebApi</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{c502ed7b-71c6-4bbb-ac01-f5daa9df8e52}</Project>
       <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApi\WebApi.csproj">
+      <Project>{bf97de0c-15c1-437b-8e0f-184d8d13990b}</Project>
+      <Name>WebApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

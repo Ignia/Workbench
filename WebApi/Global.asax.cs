@@ -1,12 +1,13 @@
-﻿using Ignia.Workbench.WebApi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Mvc;
+using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace Ignia.Workbench.Client {
+namespace Ignia.Workbench.WebApi {
 
   /*============================================================================================================================
   | CLASS: WEB API APPLICATION (HTTP APPLICATION)
@@ -17,6 +18,11 @@ namespace Ignia.Workbench.Client {
     | EVENT: APPLICATION START
     \-------------------------------------------------------------------------------------------------------------------------*/
     protected void Application_Start() {
+
+      //The following ship out-of-the-box with the Web API template, but are not required for a pure Web API project (i.e., w/out documentation).
+      //AreaRegistration.RegisterAllAreas();
+      //BundleConfig.RegisterBundles(BundleTable.Bundles);
+      //RouteConfig.RegisterRoutes(RouteTable.Routes);
 
       //Configure Web API routes and global settings
       GlobalConfiguration.Configure(WebApiConfig.Register);
