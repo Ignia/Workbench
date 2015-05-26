@@ -48,7 +48,7 @@ The following endpoints are defined by the out-of-the-box Web API 2.x project te
 ### Payloads
 The following provide examples of the data expected by each `POST` endpoint. 
 
-***/API/Account/ChangePassword***
+*#### ChangePassword*
 ```javascript
 {
   "OldPassword": "OldPassword",
@@ -57,7 +57,7 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-***/API/Account/SetPassword***
+*#### SetPassword*
 ```javascript
 {
   "NewPassword": "NewPassword",
@@ -65,14 +65,14 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-***/API/Account/AddExternalLogin***
+*#### AddExternalLogin*
 ```javascript
 {
   "ExternalAccessToken": "sample string 1"
 }
 ```
 
-***/API/Account/RemoveLogin***
+*#### RemoveLogin*
 ```
 {
   "LoginProvider": "Facebook",
@@ -80,7 +80,7 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-***/API/Account/Register***
+*#### Register*
 ```
 {
   "Email": "Jeremy@domain.tld",
@@ -89,7 +89,7 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-***/API/Account/RegisterExternal***
+*#### RegisterExternal*
 ```
 {
   "Email": "Jeremy@domain.tld"
