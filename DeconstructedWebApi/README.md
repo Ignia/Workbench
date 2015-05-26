@@ -24,7 +24,7 @@ Individual records can be retrieved from an OData collection using the `('Primar
 - `/Odata/Posts(5)`
 - `/OData/Comments(10)`
 
-> *Note:* The Web API OData implementation does not support selecting individual records from entity relationships. For instance, `/Odata/Posts(5)/Comments` is allowed, but `/Odata/Posts(5)/Comments(1)` will return an error. Instead, this would need to be retrieved using `/Odata/Comments(1)` ()
+> *Note:* The Web API OData implementation does not support selecting individual records from entity relationships. For instance, `/Odata/Posts(5)/Comments` is allowed, but `/Odata/Posts(5)/Comments(1)` will return an error. Instead, this would need to be retrieved using `/Odata/Comments(1)`.
 
 ## Web API
 
