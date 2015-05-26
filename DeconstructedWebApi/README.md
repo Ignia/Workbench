@@ -23,9 +23,12 @@ Individual records can be retrieved from an OData collection using the `('Primar
 - `/Odata/Posts(5)`
 - `/OData/Comments(10)`
 
-> *Note:* The Web API OData implementation does not support selecting individual records from entity relationships. For instance, `/Odata/Posts(5)/Comments` is allowed, but `/Odata/Posts(5)/Comments(1)` will return an error. Instead, this would need to be retrieved using `/Odata/Comments(1)`.
+> *Note:* The Web API OData implementation does not support selecting individual records from entity relationships. For instance, `/Odata/Posts(5)/Comments` is allowed, but `/Odata/Posts(5)/Comments(1)` will return an error. Instead, this would need to be retrieved using `/Odata/Comments(1)` ()
 
 ## Web API
+
+> *Note:* The following is simply intended to provide a quick overview of the out-of-the-box endpoints associated with the Web API 2.x project. There are many available resources that provide more thorough investigation of these endpoints elsewhere on the internet. 
+
 ### Endpoints
 The following endpoints are defined by the out-of-the-box Web API 2.x project template:
 - `/API/Account/UserInfo`\*	
@@ -45,7 +48,7 @@ The following endpoints are defined by the out-of-the-box Web API 2.x project te
 ### Payloads
 The following provide examples of the data expected by each `POST` endpoint. 
 
-#### `/API/Account/ChangePassword`
+*`/API/Account/ChangePassword`*
 ```javascript
 {
   "OldPassword": "OldPassword",
@@ -54,7 +57,7 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-#### `/API/Account/SetPassword`
+*`/API/Account/SetPassword`*
 ```javascript
 {
   "NewPassword": "NewPassword",
@@ -62,14 +65,14 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-#### `/API/Account/AddExternalLogin`
+*`/API/Account/AddExternalLogin`*
 ```javascript
 {
   "ExternalAccessToken": "sample string 1"
 }
 ```
 
-#### `/API/Account/RemoveLogin`
+*`/API/Account/RemoveLogin`*
 ```
 {
   "LoginProvider": "Facebook",
@@ -77,7 +80,7 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-#### `/API/Account/Register`
+*`/API/Account/Register`*
 ```
 {
   "Email": "Jeremy@domain.tld",
@@ -86,7 +89,7 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-#### `/API/Account/RegisterExternal`
+*`/API/Account/RegisterExternal`*
 ```
 {
   "Email": "Jeremy@domain.tld"
