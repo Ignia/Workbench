@@ -1,44 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+﻿using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
-using System.Web.Http.OData.Routing;
+
 using Ignia.Workbench.Models;
 
-namespace WebApi.Controllers
+namespace BasicWebApi.Controllers
 {
     /*
     The WebApiConfig class may require additional changes to add a route for this controller. Merge these statements into the Register method of the WebApiConfig class as applicable. Note that OData URLs are case sensitive.
 
+    using System.Web.Http.OData.Builder;
+    using System.Web.Http.OData.Extensions;
+    using Ignia.Workbench.Models;
+    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+    builder.EntitySet<Post>("Posts");
+    builder.EntitySet<Comment>("Comments"); 
+    config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
-    public class CommentsController : ODataController
+    public class PostsController : ODataController
     {
         private WorkbenchContext db = new WorkbenchContext();
 
-        // GET: odata/Comments
+        // GET: odata/Posts
         [EnableQuery]
-        public IQueryable<Comment> GetComments()
+        public IQueryable<Post> GetPosts()
         {
-            return db.Comments;
+            return db.Posts;
         }
 
-        // GET: odata/Comments(5)
+        // GET: odata/Posts(5)
         [EnableQuery]
-        public SingleResult<Comment> GetComment([FromODataUri] int key)
+        public SingleResult<Post> GetPost([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Comments.Where(comment => comment.Id == key));
+            return SingleResult.Create(db.Posts.Where(post => post.Id == key));
         }
 
-        // PUT: odata/Comments(5)
-        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Comment> patch)
+        // PUT: odata/Posts(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Post> patch)
         {
             Validate(patch.GetEntity());
 
@@ -47,13 +48,13 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            Comment comment = await db.Comments.FindAsync(key);
-            if (comment == null)
+            Post post = await db.Posts.FindAsync(key);
+            if (post == null)
             {
                 return NotFound();
             }
 
-            patch.Put(comment);
+            patch.Put(post);
 
             try
             {
@@ -61,7 +62,7 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CommentExists(key))
+                if (!PostExists(key))
                 {
                     return NotFound();
                 }
@@ -71,26 +72,26 @@ namespace WebApi.Controllers
                 }
             }
 
-            return Updated(comment);
+            return Updated(post);
         }
 
-        // POST: odata/Comments
-        public async Task<IHttpActionResult> Post(Comment comment)
+        // POST: odata/Posts
+        public async Task<IHttpActionResult> Post(Post post)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Comments.Add(comment);
+            db.Posts.Add(post);
             await db.SaveChangesAsync();
 
-            return Created(comment);
+            return Created(post);
         }
 
-        // PATCH: odata/Comments(5)
+        // PATCH: odata/Posts(5)
         [AcceptVerbs("PATCH", "MERGE")]
-        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Comment> patch)
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Post> patch)
         {
             Validate(patch.GetEntity());
 
@@ -99,13 +100,13 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            Comment comment = await db.Comments.FindAsync(key);
-            if (comment == null)
+            Post post = await db.Posts.FindAsync(key);
+            if (post == null)
             {
                 return NotFound();
             }
 
-            patch.Patch(comment);
+            patch.Patch(post);
 
             try
             {
@@ -113,7 +114,7 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CommentExists(key))
+                if (!PostExists(key))
                 {
                     return NotFound();
                 }
@@ -123,29 +124,29 @@ namespace WebApi.Controllers
                 }
             }
 
-            return Updated(comment);
+            return Updated(post);
         }
 
-        // DELETE: odata/Comments(5)
+        // DELETE: odata/Posts(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
-            Comment comment = await db.Comments.FindAsync(key);
-            if (comment == null)
+            Post post = await db.Posts.FindAsync(key);
+            if (post == null)
             {
                 return NotFound();
             }
 
-            db.Comments.Remove(comment);
+            db.Posts.Remove(post);
             await db.SaveChangesAsync();
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: odata/Comments(5)/Post
+        // GET: odata/Posts(5)/Comments
         [EnableQuery]
-        public SingleResult<Post> GetPost([FromODataUri] int key)
+        public IQueryable<Comment> GetComments([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Comments.Where(m => m.Id == key).Select(m => m.Post));
+            return db.Posts.Where(m => m.Id == key).SelectMany(m => m.Comments);
         }
 
         protected override void Dispose(bool disposing)
@@ -157,9 +158,9 @@ namespace WebApi.Controllers
             base.Dispose(disposing);
         }
 
-        private bool CommentExists(int key)
+        private bool PostExists(int key)
         {
-            return db.Comments.Count(e => e.Id == key) > 0;
+            return db.Posts.Count(e => e.Id == key) > 0;
         }
     }
 }

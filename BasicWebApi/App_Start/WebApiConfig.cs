@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.OData.Builder;
 using System.Web.Http.OData.Extensions;
+
 using Ignia.Workbench.Models;
 
-namespace WebApi
+namespace BasicWebApi
 {
   public static class WebApiConfig
   {

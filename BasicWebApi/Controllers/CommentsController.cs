@@ -13,39 +13,32 @@ using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using Ignia.Workbench.Models;
 
-namespace WebApi.Controllers
+namespace BasicWebApi.Controllers
 {
     /*
     The WebApiConfig class may require additional changes to add a route for this controller. Merge these statements into the Register method of the WebApiConfig class as applicable. Note that OData URLs are case sensitive.
 
-    using System.Web.Http.OData.Builder;
-    using System.Web.Http.OData.Extensions;
-    using Ignia.Workbench.Models;
-    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<Post>("Posts");
-    builder.EntitySet<Comment>("Comments"); 
-    config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
-    public class PostsController : ODataController
+    public class CommentsController : ODataController
     {
         private WorkbenchContext db = new WorkbenchContext();
 
-        // GET: odata/Posts
+        // GET: odata/Comments
         [EnableQuery]
-        public IQueryable<Post> GetPosts()
+        public IQueryable<Comment> GetComments()
         {
-            return db.Posts;
+            return db.Comments;
         }
 
-        // GET: odata/Posts(5)
+        // GET: odata/Comments(5)
         [EnableQuery]
-        public SingleResult<Post> GetPost([FromODataUri] int key)
+        public SingleResult<Comment> GetComment([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Posts.Where(post => post.Id == key));
+            return SingleResult.Create(db.Comments.Where(comment => comment.Id == key));
         }
 
-        // PUT: odata/Posts(5)
-        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Post> patch)
+        // PUT: odata/Comments(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Comment> patch)
         {
             Validate(patch.GetEntity());
 
@@ -54,13 +47,13 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            Post post = await db.Posts.FindAsync(key);
-            if (post == null)
+            Comment comment = await db.Comments.FindAsync(key);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            patch.Put(post);
+            patch.Put(comment);
 
             try
             {
@@ -68,7 +61,7 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PostExists(key))
+                if (!CommentExists(key))
                 {
                     return NotFound();
                 }
@@ -78,26 +71,26 @@ namespace WebApi.Controllers
                 }
             }
 
-            return Updated(post);
+            return Updated(comment);
         }
 
-        // POST: odata/Posts
-        public async Task<IHttpActionResult> Post(Post post)
+        // POST: odata/Comments
+        public async Task<IHttpActionResult> Post(Comment comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Posts.Add(post);
+            db.Comments.Add(comment);
             await db.SaveChangesAsync();
 
-            return Created(post);
+            return Created(comment);
         }
 
-        // PATCH: odata/Posts(5)
+        // PATCH: odata/Comments(5)
         [AcceptVerbs("PATCH", "MERGE")]
-        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Post> patch)
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Comment> patch)
         {
             Validate(patch.GetEntity());
 
@@ -106,13 +99,13 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            Post post = await db.Posts.FindAsync(key);
-            if (post == null)
+            Comment comment = await db.Comments.FindAsync(key);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            patch.Patch(post);
+            patch.Patch(comment);
 
             try
             {
@@ -120,7 +113,7 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PostExists(key))
+                if (!CommentExists(key))
                 {
                     return NotFound();
                 }
@@ -130,29 +123,29 @@ namespace WebApi.Controllers
                 }
             }
 
-            return Updated(post);
+            return Updated(comment);
         }
 
-        // DELETE: odata/Posts(5)
+        // DELETE: odata/Comments(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
-            Post post = await db.Posts.FindAsync(key);
-            if (post == null)
+            Comment comment = await db.Comments.FindAsync(key);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            db.Posts.Remove(post);
+            db.Comments.Remove(comment);
             await db.SaveChangesAsync();
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: odata/Posts(5)/Comments
+        // GET: odata/Comments(5)/Post
         [EnableQuery]
-        public IQueryable<Comment> GetComments([FromODataUri] int key)
+        public SingleResult<Post> GetPost([FromODataUri] int key)
         {
-            return db.Posts.Where(m => m.Id == key).SelectMany(m => m.Comments);
+            return SingleResult.Create(db.Comments.Where(m => m.Id == key).Select(m => m.Post));
         }
 
         protected override void Dispose(bool disposing)
@@ -164,9 +157,9 @@ namespace WebApi.Controllers
             base.Dispose(disposing);
         }
 
-        private bool PostExists(int key)
+        private bool CommentExists(int key)
         {
-            return db.Posts.Count(e => e.Id == key) > 0;
+            return db.Comments.Count(e => e.Id == key) > 0;
         }
     }
 }
