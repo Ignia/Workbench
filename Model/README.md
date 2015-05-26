@@ -7,7 +7,7 @@ A baseline C# data model alongside an Entity Framework 6.x implementation for pe
 - `Comments` (1:n)
 - `Posts` (1:n)
 - `TaggedInPosts` (1:n)
-- `Following` [`Followers`] (n:n)
+- `Following` \[`Followers`\] (n:n)
 - `LikedComments` (n:n)
 - `LikedPosts` (n:n)
 - `DateCreated`
