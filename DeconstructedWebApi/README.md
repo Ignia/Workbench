@@ -2,6 +2,7 @@
 A stripped-down version of Visual Studio's out-of-the-box Web API 2.x project template to provide bare-bones support for, in particular, ASP.NET Identity web services (e.g., `/API/Account/Register/`). Does not include any of the MVC, Web API Help, or other web-based devependencies that ship with the out-of-the-box template. Additionally includes an OData controller for exposing other elements from the `Model` project, including `User`, `Post`, and `Comment` end points.
 
 ## OData
+> *Note:* The followings provides a high-level overview of the out-of-the-box capabilities of OData as they apply to the `DeconstructedWebApi` project. For more in-depth coverage of OData, visit [odata.org](http://www.odata.org/).
 
 ## Endpoints
 The following endpoints are exposed by the OData implementation:
@@ -10,7 +11,7 @@ The following endpoints are exposed by the OData implementation:
 - `/OData/Comments`
 
 ## Querying Collections
-Each OData endpoint supports standard [OData v4](http://www.odata.org/) parameters via the Query String, including:
+Each OData endpoint supports standard OData parameters via the Query String, including:
 - `?$filter=` (e.g., `contains(Comments/Body, '@Jeremy')`)
 - `?$orderby=` (e.g., `DateCreated desc`)
 - `?$top=` and `$skip=` for paging
