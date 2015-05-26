@@ -1,7 +1,32 @@
 # Deconstructed Web API
 A stripped-down version of Visual Studio's out-of-the-box Web API 2.x project template to provide bare-bones support for, in particular, ASP.NET Identity web services (e.g., `/API/Account/Register/`). Does not include any of the MVC, Web API Help, or other web-based devependencies that ship with the out-of-the-box template. Additionally includes an OData controller for exposing other elements from the `Model` project, including `User`, `Post`, and `Comment` end points.
 
-## Web API Endpoints
+## OData
+
+## Endpoints
+The following endpoints are exposed by the OData implementation:
+- `/OData/Users`
+- `/OData/Posts`
+- `/OData/Comments`
+
+## Querying Collections
+Each OData endpoint supports standard [OData v4](http://www.odata.org/) parameters via the Query String, including:
+- `?$filter=` (e.g., `contains(Comments/Body, '@Jeremy')`)
+- `?$orderby=` (e.g., `DateCreated desc`)
+- `?$top=` and `$skip=` for paging
+- `?$expand=` (e.g., `Comments/Likes`)
+- `?$select=`(e.g., `Title,Body,DateCreated`)
+
+## Retrieving Records
+Individual records can be retrieved from an OData collection using the `('PrimaryKey')` format. For instance:
+- `/Odata/Users('d0457c7c-798c-4a60-b4bd-030bcad7062b')`
+- `/Odata/Posts(5)`
+- `/OData/Comments(10)`
+
+> *Note:* The Web API OData implementation does not support selecting individual records from entity relationships. For instance, `/Odata/Posts(5)/Comments` is allowed, but `/Odata/Posts(5)/Comments(1)` will return an error. Instead, this would need to be retrieved using `/Odata/Comments(1)`.
+
+## Web API
+### Endpoints
 The following endpoints are defined by the out-of-the-box Web API 2.x project template:
 - `/API/Account/UserInfo`\*	
 - `/API/Account/Logout` [POST]
@@ -17,10 +42,10 @@ The following endpoints are defined by the out-of-the-box Web API 2.x project te
 
 > \* *Requires Authentication*: The `UserInfo` and `RegisterExternal` endpoints require bearer authentication. The bearer token can be retrieved either from the `/Token` endpoint, or from the `/API/Account/ExternalLogin` endpoint (as returned via the `#access_token`). In turn, the bearer token should be prefixed with `bearer ` and relayed via the `Authorization` HTTP header.
 
-## Web API Payloads
+### Payloads
 The following provide examples of the data expected by each `POST` endpoint. 
 
-### `ChangePassword`
+#### `/API/Account/ChangePassword`
 ```javascript
 {
   "OldPassword": "OldPassword",
@@ -29,7 +54,7 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-### `SetPassword`
+#### `/API/Account/SetPassword`
 ```javascript
 {
   "NewPassword": "NewPassword",
@@ -37,14 +62,14 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-### `AddExternalLogin`
+#### `/API/Account/AddExternalLogin`
 ```javascript
 {
   "ExternalAccessToken": "sample string 1"
 }
 ```
 
-### `RemoveLogin`
+#### `/API/Account/RemoveLogin`
 ```
 {
   "LoginProvider": "Facebook",
@@ -52,7 +77,7 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-### `Register`
+#### `/API/Account/Register`
 ```
 {
   "Email": "Jeremy@domain.tld",
@@ -61,14 +86,14 @@ The following provide examples of the data expected by each `POST` endpoint.
 }
 ```
 
-### `RegisterExternal`
+#### `/API/Account/RegisterExternal`
 ```
 {
   "Email": "Jeremy@domain.tld"
 }
 ```
 
-## Changes
+### Changes
 While the Deconstructed Web API seeks to maintain parity with the out-of-the-box Web API project template, a number of changes have been made to the templates. These include:
 - All files have been reformated and commented, including the use of XmlDocs. 
 - Files have been broken down to one file per class; notably, this affects the `/Models` directory. 
@@ -78,7 +103,7 @@ While the Deconstructed Web API seeks to maintain parity with the out-of-the-box
 
 > *Important:* In the `Startup.Auth.cs` file, this template overrides the `FacebookAuthenticationProvider` class's `OnAuthenticated` property in order to set the `DefaultNameClaimType` to `Email` instead of `Username`, and also adds the `email` property to the `FacebookAuthenticationOptions.Scope` collection. This allows the Web API's external token for Facebook to be used with the Web API's `//API/Account/RegisterExternal` endpoint (which expects an email address for the username), and `//API/Account/UserInfo` (which expects that the token's username claim will match that same email address).
 
-## Removed Files
+### Removed Files
 The out-of-the-box Web API template includes a number of dependencies in order to support Web API Help pages. While Web API Help pages are useful, they a) necessitate a much larger footprint for the project, and b) are only compatible with the basic Web API controller (not the Web API OData controller). For these reasons, the following have been removed from the out-of-the-box template:
 ```
 /App_Start
