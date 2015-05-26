@@ -3,19 +3,19 @@ A stripped-down version of Visual Studio's out-of-the-box Web API 2.x project te
 
 ## Web API Endpoints
 The following endpoints are defined by the out-of-the-box Web API 2.x project template:
-- /API/Account/UserInfo\*	
-- /API/Account/Logout	[POST]
-- /API/Account/ManageInfo?returnUrl={returnUrl}&generateState={generateState}	
-- /API/Account/ChangePassword	[POST]
-- /API/Account/SetPassword [POST]
-- /API/Account/AddExternalLogin	[POST]
-- /API/Account/RemoveLogin [POST]	
-- /API/Account/ExternalLogin?provider={provider}&error={error}	
-- /API/Account/ExternalLogins?returnUrl={returnUrl}&generateState={generateState}	
-- /API/Account/Register	[POST]
-- /API/Account/RegisterExternal\*	[POST]
+- `/API/Account/UserInfo`\*	
+- `/API/Account/Logout` [POST]
+- `/API/Account/ManageInfo?returnUrl={returnUrl}&generateState={generateState}`
+- `/API/Account/ChangePassword` [POST]
+- `/API/Account/SetPassword` [POST]
+- `/API/Account/AddExternalLogin` [POST]
+- `/API/Account/RemoveLogin` [POST]
+- `/API/Account/ExternalLogin?provider={provider}&error={error}`
+- `/API/Account/ExternalLogins?returnUrl={returnUrl}&generateState={generateState}`	
+- `/API/Account/Register` [POST]
+- `/API/Account/RegisterExternal`\*	[POST]
 
-> *\*Requires Authentication*: The `UserInfo` and `RegisterExternal` endpoints require bearer authentication. The bearer token can be retrieved either from the `/Token` endpoint, or from the `/API/Account/ExternalLogin` endpoint (as returned via the `#access_token`). In turn, the bearer token should be prefixed with `bearer ` and relayed via the `Authorization` HTTP header.
+> \* *Requires Authentication*: The `UserInfo` and `RegisterExternal` endpoints require bearer authentication. The bearer token can be retrieved either from the `/Token` endpoint, or from the `/API/Account/ExternalLogin` endpoint (as returned via the `#access_token`). In turn, the bearer token should be prefixed with `bearer ` and relayed via the `Authorization` HTTP header.
 
 ## Changes
 While the Deconstructed Web API seeks to maintain parity with the out-of-the-box Web API project template, a number of changes have been made to the templates. These include:
