@@ -17,6 +17,57 @@ The following endpoints are defined by the out-of-the-box Web API 2.x project te
 
 > \* *Requires Authentication*: The `UserInfo` and `RegisterExternal` endpoints require bearer authentication. The bearer token can be retrieved either from the `/Token` endpoint, or from the `/API/Account/ExternalLogin` endpoint (as returned via the `#access_token`). In turn, the bearer token should be prefixed with `bearer ` and relayed via the `Authorization` HTTP header.
 
+## Web API Payloads
+The following provide examples of the data expected by each `POST` endpoint. 
+
+### `ChangePassword`
+```javascript
+{
+  "OldPassword": "OldPassword",
+  "NewPassword": "NewPassword",
+  "ConfirmPassword": "NewPassword"
+}
+```
+
+### `SetPassword`
+```javascript
+{
+  "NewPassword": "NewPassword",
+  "ConfirmPassword": "NewPassword"
+}
+```
+
+### `AddExternalLogin`
+```javascript
+{
+  "ExternalAccessToken": "sample string 1"
+}
+```
+
+### `RemoveLogin`
+```
+{
+  "LoginProvider": "Facebook",
+  "ProviderKey": "10152759761386507"
+}
+```
+
+### `Register`
+```
+{
+  "Email": "Jeremy@domain.tld",
+  "Password": "Password",
+  "ConfirmPassword": "Password"
+}
+```
+
+### `RegisterExternal`
+```
+{
+  "Email": "Jeremy@domain.tld"
+}
+```
+
 ## Changes
 While the Deconstructed Web API seeks to maintain parity with the out-of-the-box Web API project template, a number of changes have been made to the templates. These include:
 - All files have been reformated and commented, including the use of XmlDocs. 
