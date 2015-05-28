@@ -165,20 +165,7 @@
     * @return {promise} The change password callback promise.
     */
     function changePassword(options) {
-      var deferred = $q.defer();
-      $http.post('/API/Account/ChangePassword', options)
-				.success(function (data, status, headers, config) {
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  if (data.ModelState) {
-				    deferred.reject(parseErrors(data));
-				  }
-				  else {
-				    deferred.reject(data.Message);
-				  }
-				});
-      return deferred.promise;
+      return post('ChangePassword', options);
     }
 
   /*============================================================================================================================
@@ -196,20 +183,7 @@
     * @return {promise} The set password callback promise.
     */
     function setPassword(options) {
-      var deferred = $q.defer();
-      $http.post('/API/Account/SetPassword', options)
-				.success(function (data, status, headers, config) {
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  if (data.ModelState) {
-				    deferred.reject(parseErrors(data));
-				  }
-				  else {
-				    deferred.reject(data.Message);
-				  }
-				});
-      return deferred.promise;
+      return post('SetPassword', options);
     }
 
   /*============================================================================================================================
@@ -227,20 +201,7 @@
     * @return {promise} The add external login callback promise.
     */
     function addExternalLogin(options) {
-      var deferred = $q.defer();
-      $http.post('/API/Account/AddExternalLogin', options)
-				.success(function (data, status, headers, config) {
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  if (data.ModelState) {
-				    deferred.reject(parseErrors(data));
-				  }
-				  else {
-				    deferred.reject(data.Message);
-				  }
-				});
-      return deferred.promise;
+      return post('AddExternalLogin', options);
     }
 
   /*============================================================================================================================
@@ -257,20 +218,7 @@
     * @return {promise} The remove login callback promise.
     */
     function removeLogin(options) {
-      var deferred = $q.defer();
-      $http.post('/API/Account/RemoveLogin', options)
-				.success(function (data, status, headers, config) {
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  if (data.ModelState) {
-				    deferred.reject(parseErrors(data));
-				  }
-				  else {
-				    deferred.reject(data.Message);
-				  }
-				});
-      return deferred.promise;
+      return post('RemoveLogin', options);
     }
 
   /*============================================================================================================================
@@ -317,20 +265,7 @@
     * @return {promise} The registration callback promise.
     */
     function register(user) {
-      var deferred = $q.defer();
-      $http.post('/API/Account/Register', user)
-				.success(function (data, status, headers, config) {
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  if (data.ModelState) {
-				    deferred.reject(parseErrors(data));
-				  }
-				  else {
-				    deferred.reject(data.Message);
-				  }
-				});
-      return deferred.promise;
+      return post('Register', user);
     }
 
   /*============================================================================================================================
@@ -428,10 +363,8 @@
     * @return {promise} The external registration callback promise.
     */
     function registerExternal(email) {
-      var deferred = $q.defer();
-
-      $http.post(
-        '/api/Account/RegisterExternal',
+      return post(
+        'RegisterExternal',
         {
           Email: email
         },
@@ -440,19 +373,7 @@
             authorization: 'bearer ' + getToken()
           }
         }
-      )
-        .success(function (registerResponse, status, headers, config) {
-          deferred.resolve(registerResponse);
-        })
-        .error(function (errorData, status, headers, config) {
-          if (errorData.ModelState) {
-            deferred.reject(parseErrors(errorData));
-          }
-          else {
-            deferred.reject(errorData.Message);
-          }
-        });
-      return deferred.promise;
+      );
     }
 
   /*============================================================================================================================
@@ -503,6 +424,37 @@
 
       return deferred.promise;
 
+    }
+
+  /*============================================================================================================================
+  | METHOD: POST
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#post
+    * @kind  function
+    * @description A simple helper function that posts an object to a URL, catches any model errors, and returns a promise. 
+    *
+    * @param {string=} endpoint The endpoint to post to; assumed to start with /API/Account/.  
+    * @param {object=} payload The object to include in the payload.  
+    * @param {object=} options An optional objet containing HTTP options, such as headers, as expected by the $http service.  
+    *
+    * @return {promise} The post callback promise.
+    */
+    function post(endpoint, payload, options) {
+      var deferred = $q.defer();
+      $http.post('/API/Account/' + endpoint, payload, options || {})
+				.success(function (data, status, headers, config) {
+				  deferred.resolve(data);
+				})
+				.error(function (data, status, headers, config) {
+				  if (data.ModelState) {
+				    deferred.reject(parseErrors(data));
+				  }
+				  else {
+				    deferred.reject(data.Message);
+				  }
+				});
+      return deferred.promise;
     }
 
   /*============================================================================================================================
