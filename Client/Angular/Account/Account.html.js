@@ -31,7 +31,7 @@
 
     function activate() {
 	    loginExternal();
-	    getLoginProviders();
+	    getExternalLogins();
     }
 
 
@@ -61,8 +61,8 @@
 		    });
     }
 
-    function getLoginProviders() {
-      aspNetIdentity.getLoginProviders()
+    function getExternalLogins() {
+      aspNetIdentity.getExternalLogins()
 		    .then(function(response) {
 			    vm.providers = response;
 		    })

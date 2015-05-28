@@ -68,8 +68,8 @@
       removeLogin               : removeLogin                   ,
       changePassword            : changePassword                ,
       setPassword               : setPassword                   ,
-      getLoginProviders         : getLoginProviders             ,
-      getLoginProviderUrl       : getLoginProviderUrl           ,
+      getExternalLogins         : getExternalLogins             ,
+      getExternalLoginUrl       : getExternalLoginUrl           ,
       logout                    : logout                        
     }
 
@@ -195,7 +195,7 @@
     *
     * @return {promise} The set password callback promise.
     */
-    function changePassword(options) {
+    function setPassword(options) {
       var deferred = $q.defer();
       $http.post('/API/Account/SetPassword', options)
 				.success(function (data, status, headers, config) {
@@ -363,10 +363,10 @@
     }
 
   /*============================================================================================================================
-  | METHOD: GET LOGIN PROVIDERS
+  | METHOD: GET EXTERNAL LOGINS
   \---------------------------------------------------------------------------------------------------------------------------*/
   /** @ngdoc method
-    * @name  aspNetIdentity#getLoginProviders
+    * @name  aspNetIdentity#getExternalLogins
     * @kind  function
     * @description Retrieves a list of available third-party login providers, such as Facebook or Twitter, which the application 
     * is configured to accept. Each contains a name and a URL, which should be presented to the user as a list of login links. 
@@ -374,7 +374,7 @@
     *
     * @return {promise} The login provider's callback promise.
     */
-    function getLoginProviders() {
+    function getExternalLogins() {
       var deferred = $q.defer();
       if (loginProviders) {
         deferred.resolve(loginProviders);
@@ -392,18 +392,18 @@
     }
 
   /*============================================================================================================================
-  | METHOD: GET LOGIN PROVIDER URL
+  | METHOD: GET EXTERNAL LOGIN URL
   \---------------------------------------------------------------------------------------------------------------------------*/
   /** @ngdoc method
-    * @name  aspNetIdentity#getLoginProviderUrl
+    * @name  aspNetIdentity#getExternalLoginUrl
     * @kind  function
     * @description Given a login provider name (e.g., `Facebook`) will lookup the provider via the 
-    * {@link aspNetIdentity#getLoginProviders getLoginProviders} method.
+    * {@link aspNetIdentity#getExternalLogins getExternalLogins} method.
     *
     * @return {string} The URL of the login provider, if found; otherwise `null`.
     */
-    function getLoginProviderUrl(name) {
-      return getLoginProviders().then(function (data) {
+    function getExternalLoginUrl(name) {
+      return getExternalLogins().then(function (data) {
         var output = null;
         data.some(function (provider, index, array) {
           if (provider.Name === name) {
@@ -491,7 +491,7 @@
         }
         registerExternal(userInfo.Email).then(function(registerResponse, status, headers, config) {
           deferred.resolve(registerResponse);
-          getLoginProviderUrl(userInfo.LoginProvider).then(function(url) {
+          getExternalLoginUrl(userInfo.LoginProvider).then(function(url) {
             window.location.href = decodeURI(url);
           });
         });
