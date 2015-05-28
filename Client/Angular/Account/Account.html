@@ -9,27 +9,37 @@
 
 <form novalidate class="account">
 
-  <label>
+  <label ng-hide="vm.action === 'modify'">
     E-mail
     <br /><input type="email" ng-model="vm.user.Email" />
   </label>
 
-  <label>
+  <label ng-show="vm.hasCredentials">
+    Current Password
+    <br /><input type="password" ng-model="vm.user.OldPassword" />
+  </label>
+
+  <label ng-show="vm.action === 'modify'">
+    New Password
+    <br /><input type="password" ng-model="vm.user.NewPassword" />
+  </label>
+
+  <label ng-hide="vm.action === 'modify'">
     Password
     <br /><input type="password" ng-model="vm.user.Password" />
   </label>
 
-  <label ng-show="vm.isRegistration">
+  <label ng-hide="vm.action === 'login'">
     Confirm Password
     <br /><input type="password" ng-model="vm.user.ConfirmPassword" />
   </label>
 
-  <input type="submit" ng-click="vm.submit(vm.user)" value="Save" />
+  <input type="submit" ng-click="vm.submit(vm.user)" value="{{vm.buttonLabel}}" />
 
 </form>
 
-<section class="external-account">
-  <p>Or, login using:</p>
+<section class="external-account" ng-show="vm.providers.length > 0">
+  <p>{{vm.externalLoginLabel}}</p>
   <ul>
     <li ng-repeat="provider in vm.providers"><a ng-href="{{provider.Url}}">{{provider.Name}}</a></li>
   </ul>

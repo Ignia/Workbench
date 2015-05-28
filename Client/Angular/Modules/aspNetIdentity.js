@@ -61,7 +61,7 @@
       getUserInfo               : getUserInfo                   ,
       manageInfo                : manageInfo                    ,
       login                     : login                         ,
-      loginExternal             : loginExternal                 ,
+      processExternalLogin      : processExternalLogin          ,
       register                  : register                      ,
       registerExternal          : registerExternal              ,
       addExternalLogin          : addExternalLogin              ,
@@ -242,7 +242,14 @@
     */
     function manageInfo(returnUrl, generateState) {
       var deferred = $q.defer();
-      $http.get('/API/Account/ManageInfo?returnUrl=' + encodeURI(returnUrl) + '&generateState=' + (generateState || false))
+      $http.get(
+        '/API/Account/ManageInfo?returnUrl=' + encodeURI(returnUrl) + '&generateState=' + (generateState || false),
+        {
+          headers: {
+            authorization: 'bearer ' + getToken()
+          }
+        }
+      )
 				.success(function (data, status, headers, config) {
 				  deferred.resolve(data);
 				})
@@ -377,21 +384,22 @@
     }
 
   /*============================================================================================================================
-  | METHOD: LOGIN EXTERNAL
+  | METHOD: PROCESS EXTERNAL LOGIN
   \---------------------------------------------------------------------------------------------------------------------------*/
   /** @ngdoc method
-    * @name  aspNetIdentity#loginExternal
+    * @name  aspNetIdentity#processExternalLogin
     * @kind  function
     * @description Checks for the presence of an access token (via the `#access_token` hash parameter) generated on for users 
     * authenticated via a third-party service (such as Facebook). If found, the access token is extracted and used to determine 
-    * if the user has registered or not. If the user has not registered, they are registered via Web API's 
-    * `/API/Account/RegisterExternal` service. Once that's done, the user is sent back through the login service (retrieved 
-    * using the {@link aspNetIdentity#getLoginServiceUrl getLoginServiceUrl()} method), which then generates a final access 
-    * token. At that point, this method can be called again to log the user in by storing their access token via local storage. 
+    * if the user has registered or not. If the user has not registered, they are registered via either the Web API's 
+    * `/API/Account/RegisterExternal` service or, if they are otherwise authenticated, via the `/API/Account/AddExternalLogin`
+    * service. Once that's done, the user is sent back through the login service (retrieved using the 
+    * {@link aspNetIdentity#getLoginServiceUrl getLoginServiceUrl()} method), which then generates a final access token. At that
+    * point, this method can be called again to log the user in by storing their access token via local storage. 
     *
     * @return {promise} The external login callback promise.
     */
-    function loginExternal() {
+    function processExternalLogin() {
       var deferred = $q.defer();
       var hash = $location.hash();
 
@@ -405,6 +413,8 @@
       var userInfoPromise = getUserInfo();
 
       var registrationPromise = userInfoPromise.then(function(userInfo, status, headers, config) {
+        console.log("User Info:", userInfo);
+        console.log(userInfo);
         if (userInfo.HasRegistered) {
           localStorageService.set('token', accessToken);
           deferred.resolve(true);
@@ -412,7 +422,8 @@
         }
         registerExternal(userInfo.Email).then(function(registerResponse, status, headers, config) {
           deferred.resolve(registerResponse);
-          getExternalLoginUrl(userInfo.LoginProvider).then(function(url) {
+          console.log("Registration:", registerResponse);
+          getExternalLoginUrl(userInfo.LoginProvider).then(function (url) {
             window.location.href = decodeURI(url);
           });
         });
@@ -442,6 +453,14 @@
     */
     function post(endpoint, payload, options) {
       var deferred = $q.defer();
+      var token = getToken();
+
+      options = options || {};
+      options.headers = options.headers || {};
+      if (!options.headers.authorization && token) {
+        options.headers.authorization = 'bearer ' + getToken();
+      }
+
       $http.post('/API/Account/' + endpoint, payload, options || {})
 				.success(function (data, status, headers, config) {
 				  deferred.resolve(data);

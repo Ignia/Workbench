@@ -11,17 +11,30 @@
     /* jshint validthis:true */
     var vm = this;
 
-    vm.isRegistration = $route.current.params.action.match(/register/i);
-    
-    if (vm.isRegistration) {
+    vm.action = $route.current.params.action.toLowerCase();
+    vm.isRegistration = vm.action === 'register';
+
+    if (vm.action === 'register') {
       vm.title = 'Registration';
       vm.status = 'Please complete the following fields to register.';
+      vm.externalLoginLabel = 'Or, register using:';
+      vm.buttonLabel = 'Register';
       vm.submit = register;
     }
-    else {
+    else if (vm.action === 'login') {
       vm.title = 'Login';
       vm.status = 'Please enter your login credentials';
+      vm.externalLoginLabel = 'Or, login using:';
+      vm.buttonLabel = 'Login';
       vm.submit = login;
+    }
+    else if (vm.action === 'modify') {
+      vm.title = 'Account';
+      vm.status = 'You are currently authenticated using an external login provider. You may optionally add a password to your account below, thus allowing you to login without that provider.';
+      vm.externalLoginLabel = 'Or, bind your account to:';
+      vm.buttonLabel = 'Save Password';
+      vm.hasCredentials = false;
+      vm.submit = setPassword;
     }
 
     vm.providers = [];
@@ -30,16 +43,17 @@
     activate();
 
     function activate() {
-	    loginExternal();
+	    processExternalLogin();
 	    getExternalLogins();
+      getAccountInfo();
     }
-
 
     function register(user) {
       aspNetIdentity.register(user)
         .then(function (response) {
           vm.status = 'User ' + user.email + 'created.';
-          $location.path('/');
+        //$location.path('/');
+          login(user);
         })
         .catch(function (error) {
           vm.status = "The following errors were identified with your input:";
@@ -47,8 +61,31 @@
         });
     }
 
-    function loginExternal() {
-      aspNetIdentity.loginExternal()
+    function changePassword(user) {
+      aspNetIdentity.changePassword(user)
+        .then(function (response) {
+          vm.status = 'Password has been changed.';
+        })
+        .catch(function (error) {
+          vm.status = "The following errors were identified with your input:";
+          vm.errors = error;
+        });
+    }
+
+    function setPassword(user) {
+      aspNetIdentity.setPassword(user)
+        .then(function (response) {
+          vm.status = 'Password has been set.';
+        })
+        .catch(function (error) {
+          vm.status = "The following errors were identified with your input:";
+          vm.errors = error;
+        });
+    }
+
+
+    function processExternalLogin() {
+      aspNetIdentity.processExternalLogin()
         .then(function(response) {
           if (response) {
 			      vm.status = 'Successfully logged in';
@@ -59,6 +96,28 @@
 			    vm.status = "The following errors were identified with your input:";
 			    vm.errors = response;
 		    });
+    }
+
+    function getAccountInfo() {
+      if (!vm.isAuthenticated) return;
+      aspNetIdentity.manageInfo()
+		    .then(function (response) {
+		      vm.manageInfo = response;
+          vm.providers = response.ExternalLoginProviders; 
+          response.Logins.forEach(function (provider) {
+            if (provider.LoginProvider === 'Local') {
+              vm.status = 'You may change your password below.';
+              vm.hasCredentials = true;
+              vm.submit = changePassword;
+            }
+            vm.providers = vm.providers.filter(function (item) {
+              return item.Name !== provider.LoginProvider;
+            });
+          });
+        })
+        .catch(function (response) {
+          vm.status = "There was an error loading account management info for this profile :(."
+        });
     }
 
     function getExternalLogins() {
