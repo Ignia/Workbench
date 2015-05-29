@@ -431,28 +431,41 @@
       var userInfoPromise = getUserInfo();
 
       var registrationPromise = userInfoPromise.then(function(userInfo, status, headers, config) {
-        console.log("User Info:", userInfo);
+
         console.log(userInfo);
-        if (userInfo.HasRegistered) {
-          if (isAuthenticated()) {
-            deferred.reject("The account you are attempting to add is associated with an existing account, '" + userInfo.Email + "'.");
-            return;
+
+        if (isAuthenticated) {
+          if (userInfo.HasRegistered) {
+            deferred.reject(["The account you are attempting to add is associated with an existing account, '" + userInfo.Email + "'."]);
+            return deferred.promise;
           }
+          addExternalLogin({
+            ExternalAccessToken: accessToken
+          })
+          .then(function(addExternalLoginResponse, status, headers, config) {
+            deferred.resolve();
+          });
+          return deferred.promise;
+        }
+
+        if (userInfo.HasRegistered) {
           localStorageService.set('token', accessToken);
           deferred.resolve(true);
-          return;
+          return deferred.promise;
         }
-        registerExternal(userInfo.Email).then(function(registerResponse, status, headers, config) {
+
+        registerExternal(userInfo.Email).then(function (registerResponse, status, headers, config) {
           deferred.resolve(registerResponse);
           console.log("Registration:", registerResponse);
           getExternalLoginUrl(userInfo.LoginProvider).then(function (url) {
             window.location.href = decodeURI(url);
           });
         });
+
       });
 
       registrationPromise.catch(function (data, status, headers, config) {
-		    deferred.reject(data);
+		    deferred.reject([data]);
 		  });
 
       return deferred.promise;
