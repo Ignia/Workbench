@@ -90,6 +90,22 @@
     }
 
   /*============================================================================================================================
+  | METHOD: GET USERNAME
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#getUsername
+    * @kind  function
+    * @description Retrieves the ASP.NET username (typically the email) from either the hash, for external logins, or from the 
+    * local storage, for persistant authenticaton stored by this service. 
+    *
+    * @return {string} The ASP.NET username.
+    */
+    function getUsername() {
+      var username = parseHashAsQueryString().username;
+      return username || localStorageService.get('username');
+    }
+
+  /*============================================================================================================================
   | METHOD: IS AUTHENTICATED?
   \---------------------------------------------------------------------------------------------------------------------------*/
   /** @ngdoc method
@@ -113,6 +129,7 @@
     */
     function logout() {
       localStorageService.remove('token');
+      localStorageService.remove('username');
     }
 
   /*============================================================================================================================
@@ -144,6 +161,7 @@
       )
 				.success(function (data, status, headers, config) {
 				  localStorageService.set('token', data.access_token);
+				  localStorageService.set('username', user.Email);
 				  deferred.resolve(data);
 				})
 				.error(function (data, status, headers, config) {
@@ -416,6 +434,10 @@
         console.log("User Info:", userInfo);
         console.log(userInfo);
         if (userInfo.HasRegistered) {
+          if (isAuthenticated()) {
+            deferred.reject("The account you are attempting to add is associated with an existing account, '" + userInfo.Email + "'.");
+            return;
+          }
           localStorageService.set('token', accessToken);
           deferred.resolve(true);
           return;

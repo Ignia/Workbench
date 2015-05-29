@@ -99,7 +99,7 @@
     }
 
     function getAccountInfo() {
-      if (!vm.isAuthenticated) return;
+      if (!aspNetIdentity.isAuthenticated) return;
       aspNetIdentity.manageInfo()
 		    .then(function (response) {
 		      vm.manageInfo = response;
