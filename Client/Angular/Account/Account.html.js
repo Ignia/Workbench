@@ -99,7 +99,7 @@
 
     ///### TODO JJC052815: Need to find a cleaner way of handling the #hash exceptions here; this is unattractive. 
     function getAccountInfo() {
-      if (!aspNetIdentity.isAuthenticated) return;
+      if (!aspNetIdentity.isAuthenticated()) return;
       aspNetIdentity.manageInfo()
 		    .then(function (response) {
 		      vm.manageInfo = response;
