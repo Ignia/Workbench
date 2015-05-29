@@ -1,0 +1,12 @@
+﻿<article class="post">
+  <h2>{{vm.post.Title}}</h2>
+  {{vm.post.Body}}
+  <div class="comments">
+    <h4>Comments</h4>
+    <ul>
+      <li ng-repeat="comment in vm.post.Comments" class="comment">
+        {{comment.Body}}
+      </li>
+    </ul>
+  </div>
+</article>

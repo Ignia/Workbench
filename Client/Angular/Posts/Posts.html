@@ -2,15 +2,7 @@
 
 <section class="posts">
   <article ng-repeat="post in vm.posts" class="post">
-    <h3>{{post.Title}}</h3>
+    <h3><a ng-href="/Angular/Posts/{{post.Id}}">{{post.Title}}</a></h3>
     {{post.Body}}
-    <div class="comments">
-      <h4>Comments</h4>
-      <ul>
-        <li ng-repeat="comment in post.Comments" class="comment">
-          {{comment.Body}}
-        </li>
-      </ul>
-    </div>
   </article>
 </section>

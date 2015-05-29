@@ -9,6 +9,11 @@ function configureRoutes($routeProvider) {
 			controller: 'PostsController',
       controllerAs: 'vm'
 		})
+		.when('/Posts/:post', {
+		  templateUrl: '/Angular/Posts/Post.html',
+		  controller: 'PostController',
+		  controllerAs: 'vm'
+		})
 		.when('/Account/:action', {
 		  templateUrl: '/Angular/Account/Account.html',
 		  controller: 'AccountController',

@@ -9,7 +9,6 @@ function PostsController($location, workbench, $q) {
   var vm = this;
     
   vm.title   = 'Posts';
-  vm.someValue = workbench.someValue();
 
   workbench.getPosts().then(function(data) {
     vm.posts = data;

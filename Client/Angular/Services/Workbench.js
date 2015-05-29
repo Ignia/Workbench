@@ -15,14 +15,14 @@
 		var loginProviders;
 
 		return {
-			someValue: function() { return 'a different value' },
 			getPosts: getPosts,
- 	  }
+			getPost: getPost,
+		}
 
     function getPosts() {
 			var deferred = $q.defer();
 			$http.get(
-        '/odata/Posts?$expand=Comments',
+        '/odata/Posts',
 				{
 				  headers: {
 					  authorization: 'bearer ' + aspNetIdentity.getToken()
@@ -37,6 +37,25 @@
 				});
 			return deferred.promise;
 		}
+
+    function getPost(postId) {
+      var deferred = $q.defer();
+      $http.get(
+        '/odata/Posts(' + postId + ')/',
+				{
+				  headers: {
+				    authorization: 'bearer ' + aspNetIdentity.getToken()
+				  }
+				}
+      )
+				.success(function (data, status, headers, config) {
+				  deferred.resolve(data);
+				})
+				.error(function (data, status, headers, config) {
+				  deferred.reject("An error occurred loading the data.");
+				});
+      return deferred.promise;
+    }
 
 	}
 
