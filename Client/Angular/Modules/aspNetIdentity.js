@@ -84,8 +84,11 @@
     *
     * @return {string} The ASP.NET access token.
     */
-    function getToken() {
-      var accessToken = parseHashAsQueryString().access_token;
+    function getToken(includeHash) {
+      var accessToken;
+      if (includeHash) {
+        accessToken = parseHashAsQueryString().access_token;
+      }
       return accessToken || localStorageService.get('token');
     }
 
@@ -100,8 +103,11 @@
     *
     * @return {string} The ASP.NET username.
     */
-    function getUsername() {
-      var username = parseHashAsQueryString().username;
+    function getUsername(includeHash) {
+      var username;
+      if (includeHash) {
+        username = parseHashAsQueryString().username;
+      }
       return username || localStorageService.get('username');
     }
 
@@ -116,7 +122,7 @@
     * @return {bool} The user's authentication status.
     */
     function isAuthenticated() {
-      return (getToken()) ? true : false;
+      return (getToken(false)) ? true : false;
     }
 
   /*============================================================================================================================
@@ -183,7 +189,7 @@
     * @return {promise} The change password callback promise.
     */
     function changePassword(options) {
-      return post('ChangePassword', options);
+      return post('ChangePassword', options, false);
     }
 
   /*============================================================================================================================
@@ -201,7 +207,7 @@
     * @return {promise} The set password callback promise.
     */
     function setPassword(options) {
-      return post('SetPassword', options);
+      return post('SetPassword', options, false);
     }
 
   /*============================================================================================================================
@@ -219,7 +225,7 @@
     * @return {promise} The add external login callback promise.
     */
     function addExternalLogin(options) {
-      return post('AddExternalLogin', options);
+      return post('AddExternalLogin', options, true);
     }
 
   /*============================================================================================================================
@@ -236,7 +242,7 @@
     * @return {promise} The remove login callback promise.
     */
     function removeLogin(options) {
-      return post('RemoveLogin', options);
+      return post('RemoveLogin', options, false);
     }
 
   /*============================================================================================================================
@@ -264,7 +270,7 @@
         '/API/Account/ManageInfo?returnUrl=' + getReturnUrl(returnUrl) + '&generateState=' + (generateState || false),
         {
           headers: {
-            authorization: 'bearer ' + getToken()
+            authorization: 'bearer ' + getToken(false)
           }
         }
       )
@@ -290,7 +296,7 @@
     * @return {promise} The registration callback promise.
     */
     function register(user) {
-      return post('Register', user);
+      return post('Register', user, false);
     }
 
   /*============================================================================================================================
@@ -309,7 +315,7 @@
         '/api/Account/UserInfo',
         {
           headers: {
-            authorization: 'bearer ' + getToken()
+            authorization: 'bearer ' + getToken(true)
           }
         }
       )
@@ -393,11 +399,7 @@
         {
           Email: email
         },
-        {
-          headers: {
-            authorization: 'bearer ' + getToken()
-          }
-        }
+        true
       );
     }
 
@@ -508,14 +510,20 @@
     *
     * @return {promise} The post callback promise.
     */
-    function post(endpoint, payload, options) {
+    function post(endpoint, payload, options, includeHash) {
       var deferred = $q.defer();
-      var token = getToken();
+
+      if (options === false || options === true) {
+        includeHash = false;
+        options = {};
+      }
+
+      var token = getToken(includeHash);
 
       options = options || {};
       options.headers = options.headers || {};
       if (!options.headers.authorization && token) {
-        options.headers.authorization = 'bearer ' + getToken();
+        options.headers.authorization = 'bearer ' + token;
       }
 
       $http.post('/API/Account/' + endpoint, payload, options || {})
