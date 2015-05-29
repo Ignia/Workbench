@@ -17,7 +17,7 @@
     .config(function (localStorageServiceProvider, aspNetIdentityProvider) {
       localStorageServiceProvider.setPrefix('aspNetIdentity');
     })
-  	.provider('aspNetIdentity', aspNetIdentityProvider);
+    .provider('aspNetIdentity', aspNetIdentityProvider);
 
 /*==============================================================================================================================
 | PROVIDER: ASP.NET IDENTITY
@@ -154,25 +154,25 @@
       var deferred = $q.defer();
       $http.post(
         '/Token',
-			  $.param({
-			    'grant_type': 'password',
-			    'username': user.Email,
-			    'password': user.Password
-			  }),
-			  {
-			    'headers': {
-			      'Content-Type': 'application/x-www-form-urlencoded'
-			    }
-			  }
+        $.param({
+          'grant_type': 'password',
+          'username': user.Email,
+          'password': user.Password
+        }),
+        {
+          'headers': {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
       )
-				.success(function (data, status, headers, config) {
-				  localStorageService.set('token', data.access_token);
-				  localStorageService.set('username', user.Email);
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  deferred.reject(data.error_description);
-				});
+        .success(function (data, status, headers, config) {
+          localStorageService.set('token', data.access_token);
+          localStorageService.set('username', user.Email);
+          deferred.resolve(data);
+        })
+        .error(function (data, status, headers, config) {
+          deferred.reject(data.error_description);
+        });
       return deferred.promise;
     }
 
@@ -274,12 +274,12 @@
           }
         }
       )
-				.success(function (data, status, headers, config) {
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-  		    deferred.reject(data.Message);
-				});
+        .success(function (data, status, headers, config) {
+          deferred.resolve(data);
+        })
+        .error(function (data, status, headers, config) {
+          deferred.reject(data.Message);
+        });
       return deferred.promise;
     }
 
@@ -319,12 +319,12 @@
           }
         }
       )
-				.success(function (data, status, headers, config) {
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  deferred.reject(data.Message);
-				});
+        .success(function (data, status, headers, config) {
+          deferred.resolve(data);
+        })
+        .error(function (data, status, headers, config) {
+          deferred.reject(data.Message);
+        });
       return deferred.promise;
     }
 
@@ -347,13 +347,13 @@
         return deferred.promise;
       }
       $http.get('/API/Account/ExternalLogins?returnUrl=' + getReturnUrl(returnUrl))
-				.success(function (data, status, headers, config) {
-				  loginProviders = data;
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  deferred.reject("Unable to retrieve social logins");
-				});
+        .success(function (data, status, headers, config) {
+          loginProviders = data;
+          deferred.resolve(data);
+        })
+        .error(function (data, status, headers, config) {
+          deferred.reject("Unable to retrieve social logins");
+        });
       return deferred.promise;
     }
 
@@ -467,8 +467,8 @@
       });
 
       registrationPromise.catch(function (data, status, headers, config) {
-		    deferred.reject([data]);
-		  });
+        deferred.reject([data]);
+      });
 
       return deferred.promise;
 
@@ -527,17 +527,17 @@
       }
 
       $http.post('/API/Account/' + endpoint, payload, options || {})
-				.success(function (data, status, headers, config) {
-				  deferred.resolve(data);
-				})
-				.error(function (data, status, headers, config) {
-				  if (data.ModelState) {
-				    deferred.reject(parseErrors(data));
-				  }
-				  else {
-				    deferred.reject(data.Message);
-				  }
-				});
+        .success(function (data, status, headers, config) {
+          deferred.resolve(data);
+        })
+        .error(function (data, status, headers, config) {
+          if (data.ModelState) {
+            deferred.reject(parseErrors(data));
+          }
+          else {
+            deferred.reject(data.Message);
+          }
+        });
       return deferred.promise;
     }
 
