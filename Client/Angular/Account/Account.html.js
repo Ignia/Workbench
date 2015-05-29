@@ -1,4 +1,4 @@
-﻿(function() {
+﻿(function () {
   'use strict';
 
   angular
@@ -38,13 +38,13 @@
     }
 
     vm.providers = [];
-	  vm.errors = [];
+    vm.errors = [];
 
     activate();
 
     function activate() {
-	    processExternalLogin();
-	    getExternalLogins();
+      processExternalLogin();
+      getExternalLogins();
       getAccountInfo();
     }
 
@@ -52,7 +52,7 @@
       aspNetIdentity.register(user)
         .then(function (response) {
           vm.status = 'User ' + user.email + 'created.';
-        //$location.path('/');
+          //$location.path('/');
           login(user);
         })
         .catch(function (error) {
@@ -85,16 +85,16 @@
 
     function processExternalLogin() {
       aspNetIdentity.processExternalLogin()
-        .then(function(response) {
+        .then(function (response) {
           if (response) {
-			      vm.status = 'Successfully logged in';
+            vm.status = 'Successfully logged in';
             $location.url('/Posts');
           }
-		    })
-        .catch(function(response) {
-			    vm.status = "The following errors were identified with your input:";
-			    vm.errors = response;
-		    });
+        })
+        .catch(function (response) {
+          vm.status = "The following errors were identified with your input:";
+          vm.errors = response;
+        });
     }
 
     ///### TODO JJC052815: Need to find a cleaner way of handling the #hash exceptions here; this is unattractive. 
@@ -103,22 +103,20 @@
       aspNetIdentity.manageInfo()
 		    .then(function (response) {
 		      vm.manageInfo = response;
-          vm.providers = response.ExternalLoginProviders; 
-          response.Logins.forEach(function (provider) {
-            if (provider.LoginProvider === 'Local') {
-              if (!$location.hash()) {
-                vm.status = 'You may change your password below.';
-              }
-              vm.hasCredentials = true;
-              vm.submit = changePassword;
-            }
-            if (!$location.hash()) {
-              vm.providers = vm.providers.filter(function (item) {
-                return item.Name !== provider.LoginProvider;
-              });
-            }
-          });
-        })
+		      vm.providers = response.ExternalLoginProviders;
+		      response.Logins.forEach(function (provider) {
+		        if (provider.LoginProvider === 'Local') {
+		          if (!$location.hash()) {
+		            vm.status = 'You may change your password below.';
+		          }
+		          vm.hasCredentials = true;
+		          vm.submit = changePassword;
+		        }
+		        vm.providers = vm.providers.filter(function (item) {
+		          return item.Name !== provider.LoginProvider;
+		        });
+		      });
+		    })
         .catch(function (response) {
           vm.status = "There was an error loading account management info for this profile :(."
         });
@@ -126,22 +124,22 @@
 
     function getExternalLogins() {
       aspNetIdentity.getExternalLogins()
-		    .then(function(response) {
-			    vm.providers = response;
+		    .then(function (response) {
+		      vm.providers = response;
 		    })
-        .catch(function(response) {
-			    vm.status = "There was an error loading the providers :(."
-		    });
+        .catch(function (response) {
+          vm.status = "There was an error loading the providers :(."
+        });
     }
 
     function login(user) {
       aspNetIdentity.login(user)
-		    .then(function(response) {
-			    vm.status = 'Successfully logged in as ' + response.userName;
-          $location.path('/Posts');
+		    .then(function (response) {
+		      vm.status = 'Successfully logged in as ' + response.userName;
+		      $location.path('/Posts');
 		    })
-		    .catch(function(error) {
-			    vm.status = 'An error occurred: ' + error;
+		    .catch(function (error) {
+		      vm.status = 'An error occurred: ' + error;
 		    });
     }
 
