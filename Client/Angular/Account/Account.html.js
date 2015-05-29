@@ -101,22 +101,22 @@
     function getAccountInfo() {
       if (!aspNetIdentity.isAuthenticated()) return;
       aspNetIdentity.manageInfo()
-		    .then(function (response) {
-		      vm.manageInfo = response;
-		      vm.providers = response.ExternalLoginProviders;
-		      response.Logins.forEach(function (provider) {
-		        if (provider.LoginProvider === 'Local') {
-		          if (!$location.hash()) {
-		            vm.status = 'You may change your password below.';
-		          }
-		          vm.hasCredentials = true;
-		          vm.submit = changePassword;
-		        }
-		        vm.providers = vm.providers.filter(function (item) {
-		          return item.Name !== provider.LoginProvider;
-		        });
-		      });
-		    })
+        .then(function (response) {
+          vm.manageInfo = response;
+          vm.providers = response.ExternalLoginProviders;
+          response.Logins.forEach(function (provider) {
+            if (provider.LoginProvider === 'Local') {
+              if (!$location.hash()) {
+                vm.status = 'You may change your password below.';
+              }
+              vm.hasCredentials = true;
+              vm.submit = changePassword;
+            }
+            vm.providers = vm.providers.filter(function (item) {
+              return item.Name !== provider.LoginProvider;
+            });
+          });
+        })
         .catch(function (response) {
           vm.status = "There was an error loading account management info for this profile :(."
         });
@@ -124,9 +124,9 @@
 
     function getExternalLogins() {
       aspNetIdentity.getExternalLogins()
-		    .then(function (response) {
-		      vm.providers = response;
-		    })
+        .then(function (response) {
+          vm.providers = response;
+        })
         .catch(function (response) {
           vm.status = "There was an error loading the providers :(."
         });
@@ -134,13 +134,13 @@
 
     function login(user) {
       aspNetIdentity.login(user)
-		    .then(function (response) {
-		      vm.status = 'Successfully logged in as ' + response.userName;
-		      $location.path('/Posts');
-		    })
-		    .catch(function (error) {
-		      vm.status = 'An error occurred: ' + error;
-		    });
+        .then(function (response) {
+          vm.status = 'Successfully logged in as ' + response.userName;
+          $location.path('/Posts');
+        })
+        .catch(function (error) {
+          vm.status = 'An error occurred: ' + error;
+        });
     }
 
   }
