@@ -243,7 +243,7 @@
     function manageInfo(returnUrl, generateState) {
       var deferred = $q.defer();
       $http.get(
-        '/API/Account/ManageInfo?returnUrl=' + encodeURI(returnUrl) + '&generateState=' + (generateState || false),
+        '/API/Account/ManageInfo?returnUrl=' + getReturnUrl(returnUrl) + '&generateState=' + (generateState || false),
         {
           headers: {
             authorization: 'bearer ' + getToken()
@@ -316,13 +316,13 @@
     *
     * @return {promise} The login provider's callback promise.
     */
-    function getExternalLogins() {
+    function getExternalLogins(returnUrl) {
       var deferred = $q.defer();
       if (loginProviders) {
         deferred.resolve(loginProviders);
         return deferred.promise;
       }
-      $http.get('/API/Account/ExternalLogins?returnUrl=%2FAngular%2FAccount%2FLogin&generateState=true')
+      $http.get('/API/Account/ExternalLogins?returnUrl=' + getReturnUrl(returnUrl))
 				.success(function (data, status, headers, config) {
 				  loginProviders = data;
 				  deferred.resolve(data);
@@ -437,7 +437,29 @@
 
     }
 
+
   /*============================================================================================================================
+  | METHOD: GET RETURN URL
+  >-----------------------------------------------------------------------------------------------------------------------------
+  | ### TODO JJC052815: Need to add support for the default URL to be preconfigured.
+  \---------------------------------------------------------------------------------------------------------------------------*/
+  /** @ngdoc method
+    * @name  aspNetIdentity#getReturnUrl
+    * @kind  function
+    * @description Retrieves the default return URL. This can be set via configuration. Otherwise, value is defined dynamically 
+    * based on the current URL. If a returnUrl parameter is passed in as a parameter, it will be used instead. 
+    *
+    * @param {string} returnUrl Optionally allows the return URL to be manually defined. This is available as a syntactical 
+    * convenience so that developers don't need to check for the presence of a client-defined returnUrl before calling this
+    * method. 
+    *
+    * @return {string} The encoded return URL.
+    */
+    function getReturnUrl(returnUrl) {
+      return encodeURI(returnUrl || $location.absUrl());
+    }
+
+/*============================================================================================================================
   | METHOD: POST
   \---------------------------------------------------------------------------------------------------------------------------*/
   /** @ngdoc method
