@@ -83,7 +83,6 @@
         });
     }
 
-
     function processExternalLogin() {
       aspNetIdentity.processExternalLogin()
         .then(function(response) {
@@ -98,6 +97,7 @@
 		    });
     }
 
+    ///### TODO JJC052815: Need to find a cleaner way of handling the #hash exceptions here; this is unattractive. 
     function getAccountInfo() {
       if (!aspNetIdentity.isAuthenticated) return;
       aspNetIdentity.manageInfo()
@@ -106,13 +106,17 @@
           vm.providers = response.ExternalLoginProviders; 
           response.Logins.forEach(function (provider) {
             if (provider.LoginProvider === 'Local') {
-              vm.status = 'You may change your password below.';
+              if (!$location.hash()) {
+                vm.status = 'You may change your password below.';
+              }
               vm.hasCredentials = true;
               vm.submit = changePassword;
             }
-            vm.providers = vm.providers.filter(function (item) {
-              return item.Name !== provider.LoginProvider;
-            });
+            if (!$location.hash()) {
+              vm.providers = vm.providers.filter(function (item) {
+                return item.Name !== provider.LoginProvider;
+              });
+            }
           });
         })
         .catch(function (response) {
