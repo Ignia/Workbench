@@ -12,8 +12,8 @@
     var vm = this;
     
     vm.title   = 'Home Controller';
-	  vm.isAuthenticated = aspNetIdentity.isAuthenticated;
-	  vm.logout = logout;
+    vm.isAuthenticated = aspNetIdentity.isAuthenticated;
+    vm.logout = logout;
 
     activate();
 
@@ -21,10 +21,10 @@
 
     }
 
-	  function logout() {
-		  aspNetIdentity.logout();
-		  $location.url('/Account/Login');
-	  }
+    function logout() {
+      aspNetIdentity.logout();
+      $location.url('/Account/Login');
+    }
 
   }
 })();
