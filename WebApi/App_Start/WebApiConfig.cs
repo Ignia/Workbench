@@ -5,9 +5,9 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
-using System.Web.Http.OData.Builder;
-using System.Web.Http.OData.Extensions;
 using Ignia.Workbench.Models;
+using System.Web.OData.Extensions;
+using System.Web.OData.Builder;
 
 namespace Ignia.Workbench.WebApi {
 
@@ -43,6 +43,7 @@ namespace Ignia.Workbench.WebApi {
       \-----------------------------------------------------------------------------------------------------------------------*/
       //Allow routes to be overwritten in the controller based on the [Route] attribute
       config.MapHttpAttributeRoutes();
+      config.EnableCaseInsensitive(caseInsensitive: true);
 
       /*------------------------------------------------------------------------------------------------------------------------
       | Establish WebAPI Routes (uses for /Api/Account/ endpoint)
@@ -60,7 +61,7 @@ namespace Ignia.Workbench.WebApi {
       builder.EntitySet<Post>("Posts");
       builder.EntitySet<Comment>("Comments");
       builder.EntitySet<User>("Users");
-      config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
+      config.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
 
     }
 
